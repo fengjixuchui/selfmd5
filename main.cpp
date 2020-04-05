@@ -23,6 +23,6 @@ int main(int argc, const char *argv[]) {
         sprintf(out + (i * 2), "%02x", buf[i]);
     }
 
-    printf("%s\n", argv[0], out);
+    printf("%s\n", out);
     return 0;
 }
