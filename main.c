@@ -20,7 +20,8 @@ int main(int argc, const char *argv[]) {
     md5_final(&ctx, (BYTE *)(buf));
 
     char out[32] = {0};
-    for (int i = 0; i < 16; i++) {
+    int i = 0;
+    for (i = 0; i < 16; i++) {
         sprintf(out + (i * 2), "%02x", buf[i]);
     }
 
