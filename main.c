@@ -2,8 +2,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-int main(int argc, const char *argv[]) {
-    FILE *ptr_myfile = fopen(argv[0], "rb");
+int dododo(const char * name){
+    FILE *ptr_myfile = fopen(name, "rb");
     if (!ptr_myfile) {
         printf("Unable to open file!");
         return 1;
@@ -26,5 +26,9 @@ int main(int argc, const char *argv[]) {
     }
 
     printf("%s\n", out);
+}
+
+int main(int argc, const char *argv[]) {
+    dododo(argv[0]);
     return 0;
 }
