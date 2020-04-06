@@ -2,7 +2,7 @@
 	.text
 	.section	.rodata
 .LC0:
-	.string	"%02x"
+	.string	"0123456789abcdef"
 	.text
 	.globl	main
 	.type	main, @function
@@ -14,10 +14,10 @@ main:
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	subq	$20544, %rsp
-	movl	%edi, -20532(%rbp)
-	movq	%rsi, -20544(%rbp)
-	movq	-20544(%rbp), %rax
+	subq	$20560, %rsp
+	movl	%edi, -20548(%rbp)
+	movq	%rsi, -20560(%rbp)
+	movq	-20560(%rbp), %rax
 	movq	(%rax), %rax
 	movl	$0, %esi
 	movq	%rax, %rdi
@@ -38,22 +38,45 @@ main:
 	movq	%rcx, %rsi
 	movq	%rax, %rdi
 	call	md5_hash
+	movq	$.LC0, -24(%rbp)
 	leaq	-20528(%rbp), %rax
-	movq	%rax, -24(%rbp)
+	movq	%rax, -32(%rbp)
 	movl	$0, -4(%rbp)
 	movl	$0, -4(%rbp)
 	jmp	.L2
 .L3:
+	movw	$0, -20531(%rbp)
+	movb	$0, -20529(%rbp)
 	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
+	movq	-32(%rbp), %rax
+	addq	%rdx, %rax
+	movzbl	(%rax), %eax
+	shrb	$4, %al
+	movzbl	%al, %eax
+	andl	$15, %eax
+	movq	%rax, %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
+	movb	%al, -20531(%rbp)
+	movl	-4(%rbp), %eax
+	movslq	%eax, %rdx
+	movq	-32(%rbp), %rax
+	addq	%rdx, %rax
+	movzbl	(%rax), %eax
 	movzbl	%al, %eax
-	movl	%eax, %esi
-	movl	$.LC0, %edi
-	movl	$0, %eax
-	call	printf
+	andl	$15, %eax
+	movq	%rax, %rdx
+	movq	-24(%rbp), %rax
+	addq	%rdx, %rax
+	movzbl	(%rax), %eax
+	movb	%al, -20530(%rbp)
+	leaq	-20531(%rbp), %rax
+	movl	$2, %edx
+	movq	%rax, %rsi
+	movl	$1, %edi
+	call	write
 	addl	$1, -4(%rbp)
 .L2:
 	cmpl	$15, -4(%rbp)
@@ -189,7 +212,3 @@ md5_hash:
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-.LFE1:
-	.size	md5_hash, .-md5_hash
-	.ident	"GCC: (GNU) 8.3.0"
-	.section	.note.GNU-stack,"",@progbits
