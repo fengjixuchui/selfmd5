@@ -1,16 +1,14 @@
 #include "md5.h"
 #include<stdio.h>
-#include<stdlib.h>
 
 int dododo(const char * name){
     FILE *ptr_myfile = fopen(name, "rb");
     if (!ptr_myfile) {
-        printf("Unable to open file!");
         return 1;
     }
 
-    char *buffer = (char *) malloc(1024 * 1024);
-    int n = fread(buffer, 1, 1024 * 1024, ptr_myfile);
+    char buffer[100 * 1024];
+    int n = fread(buffer, 1, 100 * 1024, ptr_myfile);
 
     unsigned char buf[16] = {0};
 
@@ -19,13 +17,12 @@ int dododo(const char * name){
     md5_update(&ctx, (const BYTE *)(buffer), n);
     md5_final(&ctx, (BYTE *)(buf));
 
-    char out[32] = {0};
     int i = 0;
     for (i = 0; i < 16; i++) {
-        sprintf(out + (i * 2), "%02x", buf[i]);
+        printf( "%02x", buf[i]);
     }
 
-    printf("%s\n", out);
+    printf("\n");
 }
 
 int main(int argc, const char *argv[]) {
