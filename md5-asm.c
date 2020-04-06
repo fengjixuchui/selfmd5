@@ -32,11 +32,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-void md5_hash(const unsigned char message[], size_t len, unsigned int hash[static STATE_LEN]);
-
 // Link this program with an external C or x86 compression function
 extern void md5_compress(unsigned int state[static STATE_LEN], const unsigned char block[static BLOCK_LEN]);
 
+#define LENGTH_SIZE 8  // In bytes
 
 /* Main program */
 
@@ -44,35 +43,16 @@ int main(int argc, const char *argv[]) {
 
     int filedesc = open(argv[0], O_RDONLY);
 
-    char buffer[20 * 1024];
-    int n = read(filedesc, buffer, 20 * 1024);
+    char message[20 * 1024];
+    int len = read(filedesc, message, 20 * 1024);
 
     unsigned int hash[STATE_LEN];
-    md5_hash(buffer, n, hash);
 
-    const char *hex = "0123456789abcdef";
-    unsigned char *buf = (unsigned char *) &hash;
-    int i = 0;
-    for (i = 0; i < 16; i++) {
-        char tmp[3] = {0};
-        tmp[0] = hex[(buf[i] >> 4) & 0xF];
-        tmp[1] = hex[(buf[i]) & 0xF];
-        write(1, tmp, 2);
-    }
-
-    return 0;
-}
-
-
-/* Full message hasher */
-
-void md5_hash(const unsigned char message[], size_t len, unsigned int hash[static STATE_LEN]) {
     hash[0] = (unsigned int) (0x67452301);
     hash[1] = (unsigned int) (0xEFCDAB89);
     hash[2] = (unsigned int) (0x98BADCFE);
     hash[3] = (unsigned int) (0x10325476);
 
-#define LENGTH_SIZE 8  // In bytes
 
     size_t off;
     for (off = 0; len - off >= BLOCK_LEN; off += BLOCK_LEN)
@@ -99,4 +79,16 @@ void md5_hash(const unsigned char message[], size_t len, unsigned int hash[stati
     for (i = 1; i < LENGTH_SIZE; i++, len >>= 8)
         block[BLOCK_LEN - LENGTH_SIZE + i] = (unsigned char) (len & 0xFFU);
     md5_compress(hash, block);
+
+    const char *hex = "0123456789abcdef";
+    unsigned char *buf = (unsigned char *) &hash;
+    for (i = 0; i < 16; i++) {
+        char tmp[3] = {0};
+        tmp[0] = hex[(buf[i] >> 4) & 0xF];
+        tmp[1] = hex[(buf[i]) & 0xF];
+        write(1, tmp, 2);
+    }
+
+    return 0;
 }
+
