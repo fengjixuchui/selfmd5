@@ -1,44 +1,37 @@
-	.file	"md5-test.c"
+	.file	"md5-asm.c"
 	.text
 	.section	.rodata
 .LC0:
-	.string	"rb"
-.LC1:
 	.string	"%02x"
 	.text
 	.globl	main
 	.type	main, @function
 main:
-.LFB2:
+.LFB0:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
 	.cfi_offset 6, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
-	subq	$20576, %rsp
-	movl	%edi, -20564(%rbp)
-	movq	%rsi, -20576(%rbp)
-	movq	-20576(%rbp), %rax
+	subq	$20544, %rsp
+	movl	%edi, -20532(%rbp)
+	movq	%rsi, -20544(%rbp)
+	movq	-20544(%rbp), %rax
 	movq	(%rax), %rax
-	movl	$.LC0, %esi
+	movl	$0, %esi
 	movq	%rax, %rdi
-	call	fopen
-	movq	%rax, -16(%rbp)
-	cmpq	$0, -16(%rbp)
-	jne	.L2
-	movl	$1, %eax
-	jmp	.L6
-.L2:
-	movq	-16(%rbp), %rdx
-	leaq	-20512(%rbp), %rax
-	movq	%rdx, %rcx
+	movl	$0, %eax
+	call	open
+	movl	%eax, -8(%rbp)
+	leaq	-20512(%rbp), %rcx
+	movl	-8(%rbp), %eax
 	movl	$20480, %edx
-	movl	$1, %esi
-	movq	%rax, %rdi
-	call	fread
-	movl	%eax, -20(%rbp)
-	movl	-20(%rbp), %eax
+	movq	%rcx, %rsi
+	movl	%eax, %edi
+	call	read
+	movl	%eax, -12(%rbp)
+	movl	-12(%rbp), %eax
 	movslq	%eax, %rcx
 	leaq	-20528(%rbp), %rdx
 	leaq	-20512(%rbp), %rax
@@ -46,50 +39,36 @@ main:
 	movq	%rax, %rdi
 	call	md5_hash
 	leaq	-20528(%rbp), %rax
-	movq	%rax, -32(%rbp)
-	movq	$0, -20560(%rbp)
-	movq	$0, -20552(%rbp)
-	movq	$0, -20544(%rbp)
-	movq	$0, -20536(%rbp)
+	movq	%rax, -24(%rbp)
 	movl	$0, -4(%rbp)
 	movl	$0, -4(%rbp)
-	jmp	.L4
-.L5:
+	jmp	.L2
+.L3:
 	movl	-4(%rbp), %eax
 	movslq	%eax, %rdx
-	movq	-32(%rbp), %rax
+	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
 	movzbl	(%rax), %eax
 	movzbl	%al, %eax
-	movl	-4(%rbp), %edx
-	addl	%edx, %edx
-	movslq	%edx, %rdx
-	leaq	-20560(%rbp), %rcx
-	addq	%rdx, %rcx
-	movl	%eax, %edx
-	movl	$.LC1, %esi
-	movq	%rcx, %rdi
+	movl	%eax, %esi
+	movl	$.LC0, %edi
 	movl	$0, %eax
-	call	sprintf
+	call	printf
 	addl	$1, -4(%rbp)
-.L4:
+.L2:
 	cmpl	$15, -4(%rbp)
-	jle	.L5
-	leaq	-20560(%rbp), %rax
-	movq	%rax, %rdi
-	call	puts
+	jle	.L3
 	movl	$0, %eax
-.L6:
 	leave
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-.LFE2:
+.LFE0:
 	.size	main, .-main
 	.globl	md5_hash
 	.type	md5_hash, @function
 md5_hash:
-.LFB3:
+.LFB1:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -112,8 +91,8 @@ md5_hash:
 	addq	$12, %rax
 	movl	$271733878, (%rax)
 	movq	$0, -8(%rbp)
-	jmp	.L8
-.L9:
+	jmp	.L6
+.L7:
 	movq	-104(%rbp), %rdx
 	movq	-8(%rbp), %rax
 	addq	%rax, %rdx
@@ -122,11 +101,11 @@ md5_hash:
 	movq	%rax, %rdi
 	call	md5_compress
 	addq	$64, -8(%rbp)
-.L8:
+.L6:
 	movq	-112(%rbp), %rax
 	subq	-8(%rbp), %rax
 	cmpq	$63, %rax
-	ja	.L9
+	ja	.L7
 	movq	$0, -96(%rbp)
 	movq	$0, -88(%rbp)
 	movq	$0, -80(%rbp)
@@ -139,8 +118,8 @@ md5_hash:
 	subq	-8(%rbp), %rax
 	movq	%rax, -24(%rbp)
 	movl	$0, -12(%rbp)
-	jmp	.L10
-.L11:
+	jmp	.L8
+.L9:
 	movl	-12(%rbp), %eax
 	movslq	%eax, %rdx
 	movq	-8(%rbp), %rax
@@ -152,11 +131,11 @@ md5_hash:
 	cltq
 	movb	%dl, -96(%rbp,%rax)
 	addl	$1, -12(%rbp)
-.L10:
+.L8:
 	movl	-12(%rbp), %eax
 	cltq
 	cmpq	%rax, -24(%rbp)
-	ja	.L11
+	ja	.L9
 	leaq	-96(%rbp), %rdx
 	movq	-24(%rbp), %rax
 	addq	%rdx, %rax
@@ -165,31 +144,31 @@ md5_hash:
 	movl	$64, %eax
 	subq	-24(%rbp), %rax
 	cmpq	$7, %rax
-	ja	.L12
+	ja	.L10
 	leaq	-96(%rbp), %rdx
 	movq	-120(%rbp), %rax
 	movq	%rdx, %rsi
 	movq	%rax, %rdi
 	call	md5_compress
 	movl	$0, -12(%rbp)
-	jmp	.L13
-.L14:
+	jmp	.L11
+.L12:
 	movl	-12(%rbp), %eax
 	cltq
 	movb	$0, -96(%rbp,%rax)
 	addl	$1, -12(%rbp)
-.L13:
+.L11:
 	movl	-12(%rbp), %eax
 	cmpl	$63, %eax
-	jbe	.L14
-.L12:
+	jbe	.L12
+.L10:
 	movq	-112(%rbp), %rax
 	sall	$3, %eax
 	movb	%al, -40(%rbp)
 	shrq	$5, -112(%rbp)
 	movl	$1, -12(%rbp)
-	jmp	.L15
-.L16:
+	jmp	.L13
+.L14:
 	movl	-12(%rbp), %eax
 	addl	$56, %eax
 	movq	-112(%rbp), %rdx
@@ -197,9 +176,9 @@ md5_hash:
 	movb	%dl, -96(%rbp,%rax)
 	addl	$1, -12(%rbp)
 	shrq	$8, -112(%rbp)
-.L15:
+.L13:
 	cmpl	$7, -12(%rbp)
-	jle	.L16
+	jle	.L14
 	leaq	-96(%rbp), %rdx
 	movq	-120(%rbp), %rax
 	movq	%rdx, %rsi
@@ -210,7 +189,7 @@ md5_hash:
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-.LFE3:
+.LFE1:
 	.size	md5_hash, .-md5_hash
 	.ident	"GCC: (GNU) 8.3.0"
 	.section	.note.GNU-stack,"",@progbits
