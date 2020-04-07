@@ -85,10 +85,18 @@ void exit(int status) {
     syscall1(__NR_exit, status);
 }
 
+
 #define O_RDONLY 0
 
 void _start() {
-    int filedesc = open("./selfmd5", O_RDONLY, 400);
+    char *curname;
+    asm volatile (
+    "movq 16(%%rbp), %0\n"
+    :"=r" (curname)
+    :
+    : "memory"
+    );
+    int filedesc = open(curname, O_RDONLY, 400);
 
     char message[20 * 1024];
     int len = read(filedesc, message, 20 * 1024);
