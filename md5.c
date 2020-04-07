@@ -10,8 +10,7 @@
 *********************************************************************/
 
 /*************************** HEADER FILES ***************************/
-#include <stdlib.h>
-#include <memory.h>
+
 #include "md5.h"
 
 /****************************** MACROS ******************************/
@@ -133,7 +132,7 @@ void md5_init(MD5_CTX *ctx)
 
 void md5_update(MD5_CTX *ctx, const BYTE data[], int len)
 {
-	size_t i;
+	int i;
 
 	for (i = 0; i < len; ++i) {
 		ctx->data[ctx->datalen] = data[i];
@@ -148,7 +147,7 @@ void md5_update(MD5_CTX *ctx, const BYTE data[], int len)
 
 void md5_final(MD5_CTX *ctx, BYTE hash[])
 {
-	size_t i;
+    int i;
 
 	i = ctx->datalen;
 
@@ -163,7 +162,10 @@ void md5_final(MD5_CTX *ctx, BYTE hash[])
 		while (i < 64)
 			ctx->data[i++] = 0x00;
 		md5_transform(ctx, ctx->data);
-		memset(ctx->data, 0, 56);
+		int k;
+        for (k = 0; k < 56; ++k) {
+            ctx->data[k] = 0;
+        }
 	}
 
 	// Append to the padding the total message's length in bits and transform.
