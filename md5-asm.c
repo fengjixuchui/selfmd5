@@ -29,19 +29,66 @@
 #define BLOCK_LEN 64  // In bytes
 #define STATE_LEN 4  // In words
 
-#include <unistd.h>
-#include <fcntl.h>
-
 // Link this program with an external C or x86 compression function
 extern void md5_compress(unsigned int state[static STATE_LEN], const unsigned char block[static BLOCK_LEN]);
 
 #define LENGTH_SIZE 8  // In bytes
 
-/* Main program */
+static inline long syscall1(long code, long arg1) {
+    long ret;
+    asm volatile (
+    "movq %1, %%rax\n"
+    "movq %2, %%rdi\n"
+    "syscall\n"
+    "movq %%rax, %0\n"
+    :"=r" (ret)
+    :"r"(code), "r"(arg1)
+    :"%rax", "%rdi", "memory"
+    );
+    return ret;
+}
 
-int main(int argc, const char *argv[]) {
+static inline long syscall3(long code, long arg1, long arg2, long arg3) {
+    long ret;
+    asm volatile (
+    "movq %1, %%rax\n"
+    "movq %2, %%rdi\n"
+    "movq %3, %%rsi\n"
+    "movq %4, %%rdx\n"
+    "syscall\n"
+    "movq %%rax, %0\n"
+    :"=r" (ret)
+    :"r"(code), "r"(arg1), "r"(arg2), "r"(arg3)
+    :"%rax", "%rdi", "%rsi", "%rdx", "memory"
+    );
+    return ret;
+}
 
-    int filedesc = open(argv[0], O_RDONLY);
+#define __NR_read 0
+#define __NR_write 1
+#define __NR_open 2
+#define __NR_exit 60
+
+int write(int fd, const void *buf, int count) {
+    return syscall3(__NR_write, fd, (long) buf, count);
+}
+
+int read(int fd, void *buf, int count) {
+    return syscall3(__NR_read, (long) fd, (long) buf, (long) count);
+}
+
+int open(const void *name, int flag, int mode) {
+    return syscall3(__NR_open, (long) name, (long) flag, (long) mode);
+}
+
+void exit(int status) {
+    syscall1(__NR_exit, status);
+}
+
+#define O_RDONLY 0
+
+void _start() {
+    int filedesc = open("./selfmd5", O_RDONLY, 400);
 
     char message[20 * 1024];
     int len = read(filedesc, message, 20 * 1024);
@@ -53,13 +100,12 @@ int main(int argc, const char *argv[]) {
     hash[2] = (unsigned int) (0x98BADCFE);
     hash[3] = (unsigned int) (0x10325476);
 
-
-    size_t off;
+    int off;
     for (off = 0; len - off >= BLOCK_LEN; off += BLOCK_LEN)
         md5_compress(hash, &message[off]);
 
     unsigned char block[BLOCK_LEN] = {0};
-    size_t rem = len - off;
+    int rem = len - off;
     int i;
     for (i = 0; i < rem; i++) {
         block[i] = message[off + i];
@@ -89,6 +135,6 @@ int main(int argc, const char *argv[]) {
         write(1, tmp, 2);
     }
 
-    return 0;
+    exit(0);
 }
 
