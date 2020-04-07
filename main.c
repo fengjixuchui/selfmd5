@@ -1,33 +1,27 @@
 #include "md5.h"
 
 static inline long syscall1(long code, long arg1) {
-    long ret;
     asm volatile (
-    "movq %1, %%rax\n"
-    "movq %2, %%rdi\n"
+    "movq %%rdi, %%rax\n"
+    "movq %%rsi, %%rdi\n"
     "syscall\n"
-    "movq %%rax, %0\n"
-    :"=r" (ret)
-    :"r"(code), "r"(arg1)
-    :"%rax", "%rdi", "memory"
+    :
+    :
+    : "memory"
     );
-    return ret;
 }
 
 static inline long syscall3(long code, long arg1, long arg2, long arg3) {
-    long ret;
     asm volatile (
-    "movq %1, %%rax\n"
-    "movq %2, %%rdi\n"
-    "movq %3, %%rsi\n"
-    "movq %4, %%rdx\n"
+    "movq %%rdi, %%rax\n"
+    "movq %%rsi, %%rdi\n"
+    "movq %%rdx, %%rsi\n"
+    "movq %%rcx, %%rdx\n"
     "syscall\n"
-    "movq %%rax, %0\n"
-    :"=r" (ret)
-    :"r"(code), "r"(arg1), "r"(arg2), "r"(arg3)
-    :"%rax", "%rdi", "%rsi", "%rdx", "memory"
+    :
+    :
+    : "memory"
     );
-    return ret;
 }
 
 #define __NR_read 0
@@ -35,13 +29,13 @@ static inline long syscall3(long code, long arg1, long arg2, long arg3) {
 #define __NR_open 2
 #define __NR_exit 60
 
-#define write( fd, buf, count) syscall3(__NR_write, fd, (long) (buf), count)
+#define write(fd, buf, count) syscall3(__NR_write, fd, (long) (buf), count)
 
-#define read(int fd, void *buf, int count) syscall3(__NR_read, (long) fd, (long) (buf), (long) count)
+#define read(fd, buf, count) syscall3(__NR_read, (long) fd, (long) (buf), (long) count)
 
-#define open(const void *name, int flag, int mode) syscall3(__NR_open, (long) name, (long) flag, (long) mode)
+#define open(name, flag, mode) syscall3(__NR_open, (long) name, (long) flag, (long) mode)
 
-#define exit(int status) syscall1(__NR_exit, status)
+#define exit(status) syscall1(__NR_exit, status)
 
 #define O_RDONLY 0
 
