@@ -35,33 +35,27 @@ extern void md5_compress(unsigned int state[static STATE_LEN], const unsigned ch
 #define LENGTH_SIZE 8  // In bytes
 
 static inline long syscall1(long code, long arg1) {
-    long ret;
     asm volatile (
-    "movq %1, %%rax\n"
-    "movq %2, %%rdi\n"
+    "movq %%rdi, %%rax\n"
+    "movq %%rsi, %%rdi\n"
     "syscall\n"
-    "movq %%rax, %0\n"
-    :"=r" (ret)
-    :"r"(code), "r"(arg1)
-    :"%rax", "%rdi", "memory"
+    :
+    :
+    : "memory"
     );
-    return ret;
 }
 
 static inline long syscall3(long code, long arg1, long arg2, long arg3) {
-    long ret;
     asm volatile (
-    "movq %1, %%rax\n"
-    "movq %2, %%rdi\n"
-    "movq %3, %%rsi\n"
-    "movq %4, %%rdx\n"
+    "movq %%rdi, %%rax\n"
+    "movq %%rsi, %%rdi\n"
+    "movq %%rdx, %%rsi\n"
+    "movq %%rcx, %%rdx\n"
     "syscall\n"
-    "movq %%rax, %0\n"
-    :"=r" (ret)
-    :"r"(code), "r"(arg1), "r"(arg2), "r"(arg3)
-    :"%rax", "%rdi", "%rsi", "%rdx", "memory"
+    :
+    :
+    : "memory"
     );
-    return ret;
 }
 
 #define __NR_read 0
