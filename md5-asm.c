@@ -63,19 +63,19 @@ static inline long syscall3(long code, long arg1, long arg2, long arg3) {
 #define __NR_open 2
 #define __NR_exit 60
 
-int write(int fd, const void *buf, int count) {
+static inline int write(int fd, const void *buf, int count) {
     return syscall3(__NR_write, fd, (long) buf, count);
 }
 
-int read(int fd, void *buf, int count) {
+static inline int read(int fd, void *buf, int count) {
     return syscall3(__NR_read, (long) fd, (long) buf, (long) count);
 }
 
-int open(const void *name, int flag, int mode) {
+static inline int open(const void *name, int flag, int mode) {
     return syscall3(__NR_open, (long) name, (long) flag, (long) mode);
 }
 
-void exit(int status) {
+static inline void exit(int status) {
     syscall1(__NR_exit, status);
 }
 

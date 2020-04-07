@@ -56,7 +56,6 @@ syscall
 	.cfi_endproc
 .LFE1:
 	.size	syscall3, .-syscall3
-	.globl	write
 	.type	write, @function
 write:
 .LFB2:
@@ -84,7 +83,6 @@ write:
 	.cfi_endproc
 .LFE2:
 	.size	write, .-write
-	.globl	read
 	.type	read, @function
 read:
 .LFB3:
@@ -112,7 +110,6 @@ read:
 	.cfi_endproc
 .LFE3:
 	.size	read, .-read
-	.globl	open
 	.type	open, @function
 open:
 .LFB4:
@@ -140,7 +137,6 @@ open:
 	.cfi_endproc
 .LFE4:
 	.size	open, .-open
-	.globl	exit
 	.type	exit, @function
 exit:
 .LFB5:
@@ -339,6 +335,10 @@ _start:
 	jle	.L21
 	movl	$0, %edi
 	call	exit
+	nop
+	leave
+	.cfi_def_cfa 7, 8
+	ret
 	.cfi_endproc
 .LFE6:
 	.size	_start, .-_start
