@@ -1,61 +1,24 @@
-	.file	"md5-asm.c"
+	
 	.text
-	.type	syscall1, @function
-syscall1:
-.LFB0:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movq	%rdi, -8(%rbp)
-	movq	%rsi, -16(%rbp)
-#APP
-# 38 "md5-asm.c" 1
-	movq %rdi, %rax
-movq %rsi, %rdi
-syscall
 
-# 0 "" 2
-#NO_APP
-	nop
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE0:
-	.size	syscall1, .-syscall1
 	.type	syscall3, @function
 syscall3:
-.LFB1:
-	.cfi_startproc
 	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 	movq	%rdi, -8(%rbp)
 	movq	%rsi, -16(%rbp)
 	movq	%rdx, -24(%rbp)
 	movq	%rcx, -32(%rbp)
-#APP
-# 49 "md5-asm.c" 1
 	movq %rdi, %rax
-movq %rsi, %rdi
-movq %rdx, %rsi
-movq %rcx, %rdx
-syscall
-
-# 0 "" 2
-#NO_APP
+    movq %rsi, %rdi
+    movq %rdx, %rsi
+    movq %rcx, %rdx
+    syscall
 	nop
 	popq	%rbp
-	.cfi_def_cfa 7, 8
 	ret
-	.cfi_endproc
-.LFE1:
 	.size	syscall3, .-syscall3
+
 	.section	.rodata
 .LC0:
 	.string	"0123456789abcdef"
@@ -63,13 +26,8 @@ syscall
 	.globl	_start
 	.type	_start, @function
 _start:
-.LFB2:
-	.cfi_startproc
 	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
 	subq	$20624, %rsp
 #APP
 # 78 "md5-asm.c" 1
@@ -232,15 +190,10 @@ _start:
 .L13:
 	cmpl	$15, -12(%rbp)
 	jle	.L14
-	movl	$0, %esi
-	movl	$60, %edi
-	call	syscall1
+	movq $60, %rax
+    movq $0, %rdi
+    syscall
 	nop
 	leave
-	.cfi_def_cfa 7, 8
 	ret
-	.cfi_endproc
-.LFE2:
-	.size	_start, .-_start
-	.ident	"GCC: (GNU) 8.3.0"
-	.section	.note.GNU-stack,"",@progbits
+
