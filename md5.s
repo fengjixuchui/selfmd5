@@ -1,4 +1,3 @@
-	.file	"md5test.c"
 	.text
 	.globl	FF
 	.type	FF, @function
