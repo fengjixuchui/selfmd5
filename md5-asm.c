@@ -41,7 +41,7 @@ static inline long syscall1(long code, long arg1) {
     "syscall\n"
     :
     :
-    : "memory"
+    : "%rax", "%rdi", "memory"
     );
 }
 
@@ -54,7 +54,7 @@ static inline long syscall3(long code, long arg1, long arg2, long arg3) {
     "syscall\n"
     :
     :
-    : "memory"
+    : "%rax", "%rdi", "%rsi", "%rdx", "memory"
     );
 }
 
@@ -79,7 +79,7 @@ void _start() {
     "movq 16(%%rbp), %0\n"
     :"=r" (curname)
     :
-    : "memory"
+    :  "memory"
     );
     int filedesc = open(curname, O_RDONLY, 400);
 

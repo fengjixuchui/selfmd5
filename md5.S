@@ -84,7 +84,7 @@ md5_compress:
 	/* Save registers */
 	movq  %rbx, %xmm0
 	movq  %rbp, %xmm1
-	
+
 	/* Load arguments */
 	movq  %rsi, %rbp
 	movl   0(%rdi), %eax  /* a */
