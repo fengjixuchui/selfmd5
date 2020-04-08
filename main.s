@@ -1,27 +1,17 @@
-	
 	.text
-
 	.type	syscall3, @function
 syscall3:
-	pushq	%rbp
-	movq	%rsp, %rbp
-	movq	%rdi, -8(%rbp)
-	movq	%rsi, -16(%rbp)
-	movq	%rdx, -24(%rbp)
-	movq	%rcx, -32(%rbp)
 	movq %rdi, %rax
     movq %rsi, %rdi
     movq %rdx, %rsi
     movq %rcx, %rdx
     syscall
-	nop
-	popq	%rbp
 	ret
-	.size	syscall3, .-syscall3
 
 	.section	.rodata
 .LC0:
 	.string	"0123456789abcdef"
+
 	.text
 	.globl	_start
 	.type	_start, @function
@@ -29,12 +19,7 @@ _start:
 	pushq	%rbp
 	movq	%rsp, %rbp
 	subq	$20624, %rsp
-#APP
-# 78 "md5-asm.c" 1
 	movq 16(%rbp), %rax
-
-# 0 "" 2
-#NO_APP
 	movq	%rax, -24(%rbp)
 	movq	-24(%rbp), %rax
 	movl	$400, %ecx
@@ -193,7 +178,5 @@ _start:
 	movq $60, %rax
     movq $0, %rdi
     syscall
-	nop
-	leave
 	ret
 
