@@ -1,18 +1,6 @@
-	.file	"md5-asm-1.c"
 	.text
-	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
 	.string	"0123456789abcdef"
-	.section	.text.startup,"ax",@progbits
-
-    .type	syscall3, @function
-syscall3:
-    movq %rdi, %rax
-    movq %rsi, %rdi
-    movq %rdx, %rsi
-    movq %rcx, %rdx
-    syscall
-    ret
 
 	.globl	_start
 	.type	_start, @function
@@ -124,4 +112,3 @@ _start:
 	xorl	%edi, %edi
 	movl    $60, %eax
 	syscall #call	exit
-

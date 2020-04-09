@@ -14,7 +14,6 @@ FF:
 	addl	%esi, %edx
 	movl	%edx, (%rdi)
 	ret
-	.size	FF, .-FF
 	.globl	GG
 	.type	GG, @function
 GG:
@@ -31,7 +30,6 @@ GG:
 	addl	%esi, %eax
 	movl	%eax, (%rdi)
 	ret
-	.size	GG, .-GG
 	.globl	HH
 	.type	HH, @function
 HH:
@@ -46,7 +44,6 @@ HH:
 	addl	%esi, %r8d
 	movl	%r8d, (%rdi)
 	ret
-	.size	HH, .-HH
 	.globl	II
 	.type	II, @function
 II:
@@ -63,7 +60,6 @@ II:
 	addl	%esi, %eax
 	movl	%eax, (%rdi)
 	ret
-	.size	II, .-II
 	.globl	ROTLEFT
 	.type	ROTLEFT, @function
 ROTLEFT:
@@ -71,7 +67,6 @@ ROTLEFT:
 	movl	%esi, %ecx
 	roll	%cl, %eax
 	ret
-	.size	ROTLEFT, .-ROTLEFT
 	.globl	F
 	.type	F, @function
 F:
@@ -80,7 +75,6 @@ F:
 	movl	%esi, %eax
 	xorl	%edx, %eax
 	ret
-	.size	F, .-F
 	.globl	G
 	.type	G, @function
 G:
@@ -89,7 +83,6 @@ G:
 	movl	%edi, %eax
 	xorl	%esi, %eax
 	ret
-	.size	G, .-G
 	.globl	H
 	.type	H, @function
 H:
@@ -97,7 +90,6 @@ H:
 	movl	%esi, %eax
 	xorl	%edi, %eax
 	ret
-	.size	H, .-H
 	.globl	I
 	.type	I, @function
 I:
@@ -106,7 +98,6 @@ I:
 	movl	%edx, %eax
 	xorl	%esi, %eax
 	ret
-	.size	I, .-I
 	.section	.rodata
 	.align 32
 .LC0:
