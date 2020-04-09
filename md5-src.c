@@ -3,15 +3,15 @@
 #define BYTE unsigned char
 
 /****************************** MACROS ******************************/
-WORD ROTLEFT(WORD a, WORD b) { return ((a << b) | (a >> (32 - b))); }
+#define ROTLEFT(a, b)  ((a << b) | (a >> (32 - b)))
 
-WORD F(WORD x, WORD y, WORD z) { return ((x & y) | (~x & z)); }
+#define F(x, y, z)  ((x & y) | (~x & z))
 
-WORD G(WORD x, WORD y, WORD z) { return ((x & z) | (y & ~z)); }
+#define G(x, y, z)  ((x & z) | (y & ~z))
 
-WORD H(WORD x, WORD y, WORD z) { return (x ^ y ^ z); }
+#define H(x, y, z) (x ^ y ^ z)
 
-WORD I(WORD x, WORD y, WORD z) { return (y ^ (x | ~z)); }
+#define I(x, y, z)  (y ^ (x | ~z))
 
 void FF(WORD *a, WORD b, WORD c, WORD d, WORD m, WORD s, WORD t) {
     *a += F(b, c, d) + m + t;

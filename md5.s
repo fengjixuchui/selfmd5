@@ -4,10 +4,9 @@
 	.type	FF, @function
 FF:
 	xorl	%ecx, %edx
-	movl	(%rdi), %eax
-	addl	8(%rsp), %eax
+	addl	8(%rsp), %r8d
+	addl	(%rdi), %r8d
 	andl	%esi, %edx
-	addl	%eax, %r8d
 	xorl	%ecx, %edx
 	movl	%r9d, %ecx
 	addl	%r8d, %edx
@@ -20,13 +19,12 @@ FF:
 	.type	GG, @function
 GG:
 	movl	%esi, %eax
+	addl	8(%rsp), %r8d
+	addl	(%rdi), %r8d
 	xorl	%edx, %eax
 	andl	%ecx, %eax
 	movl	%r9d, %ecx
 	xorl	%edx, %eax
-	movl	(%rdi), %edx
-	addl	8(%rsp), %edx
-	addl	%edx, %r8d
 	addl	%r8d, %eax
 	roll	%cl, %eax
 	addl	%esi, %eax
@@ -36,80 +34,35 @@ GG:
 	.globl	HH
 	.type	HH, @function
 HH:
-	movl	(%rdi), %eax
 	xorl	%ecx, %edx
-	addl	8(%rsp), %eax
+	addl	8(%rsp), %r8d
 	movl	%r9d, %ecx
-	addl	%eax, %r8d
 	xorl	%esi, %edx
-	addl	%edx, %r8d
-	roll	%cl, %r8d
-	addl	%esi, %r8d
-	movl	%r8d, (%rdi)
+	addl	%r8d, %edx
+	addl	(%rdi), %edx
+	roll	%cl, %edx
+	addl	%esi, %edx
+	movl	%edx, (%rdi)
 	ret
 	.size	HH, .-HH
 	.globl	II
 	.type	II, @function
 II:
 	movl	%ecx, %eax
+	addl	8(%rsp), %r8d
+	addl	(%rdi), %r8d
 	movl	%r9d, %ecx
 	notl	%eax
 	orl	%esi, %eax
 	xorl	%edx, %eax
-	movl	(%rdi), %edx
-	addl	8(%rsp), %edx
-	addl	%edx, %r8d
 	addl	%r8d, %eax
 	roll	%cl, %eax
 	addl	%esi, %eax
 	movl	%eax, (%rdi)
 	ret
 	.size	II, .-II
-	.globl	ROTLEFT
-	.type	ROTLEFT, @function
-ROTLEFT:
-	movl	%edi, %eax
-	movl	%esi, %ecx
-	roll	%cl, %eax
-	ret
-	.size	ROTLEFT, .-ROTLEFT
-	.globl	F
-	.type	F, @function
-F:
-	xorl	%edx, %esi
-	andl	%edi, %esi
-	movl	%esi, %eax
-	xorl	%edx, %eax
-	ret
-	.size	F, .-F
-	.globl	G
-	.type	G, @function
-G:
-	xorl	%esi, %edi
-	andl	%edx, %edi
-	movl	%edi, %eax
-	xorl	%esi, %eax
-	ret
-	.size	G, .-G
-	.globl	H
-	.type	H, @function
-H:
-	xorl	%edx, %esi
-	movl	%esi, %eax
-	xorl	%edi, %eax
-	ret
-	.size	H, .-H
-	.globl	I
-	.type	I, @function
-I:
-	notl	%edx
-	orl	%edi, %edx
-	movl	%edx, %eax
-	xorl	%esi, %eax
-	ret
-	.size	I, .-I
 	.section	.rodata
-	.align 32
+	.align 1
 .LC0:
 	.long	-680876936
 	.long	-389564586
@@ -208,7 +161,7 @@ md5_compress:
 	movl	$327936, 24(%rsp)
 	movl	$117638401, 28(%rsp)
 	movq	%rax, 56(%rsp)
-.L11:
+.L6:
 	movl	%ebp, %r10d
 	movl	%ebp, %edi
 	movl	%ebp, %eax
@@ -245,7 +198,7 @@ md5_compress:
 	popq	%r10
 	popq	%r11
 	cmpq	$64, %rbp
-	jne	.L11
+	jne	.L6
 	movl	32(%rsp), %eax
 	addl	%eax, (%rbx)
 	movl	36(%rsp), %eax
@@ -259,4 +212,4 @@ md5_compress:
 	popq	%rbp
 	popq	%r12
 	ret
-
+	.size	md5_compress, .-md5_compress
