@@ -1,3 +1,4 @@
+	.file	"md5-src.c"
 	.text
 	.globl	FF
 	.type	FF, @function
@@ -14,6 +15,7 @@ FF:
 	addl	%esi, %edx
 	movl	%edx, (%rdi)
 	ret
+	.size	FF, .-FF
 	.globl	GG
 	.type	GG, @function
 GG:
@@ -30,6 +32,7 @@ GG:
 	addl	%esi, %eax
 	movl	%eax, (%rdi)
 	ret
+	.size	GG, .-GG
 	.globl	HH
 	.type	HH, @function
 HH:
@@ -44,6 +47,7 @@ HH:
 	addl	%esi, %r8d
 	movl	%r8d, (%rdi)
 	ret
+	.size	HH, .-HH
 	.globl	II
 	.type	II, @function
 II:
@@ -60,6 +64,7 @@ II:
 	addl	%esi, %eax
 	movl	%eax, (%rdi)
 	ret
+	.size	II, .-II
 	.globl	ROTLEFT
 	.type	ROTLEFT, @function
 ROTLEFT:
@@ -67,6 +72,7 @@ ROTLEFT:
 	movl	%esi, %ecx
 	roll	%cl, %eax
 	ret
+	.size	ROTLEFT, .-ROTLEFT
 	.globl	F
 	.type	F, @function
 F:
@@ -75,6 +81,7 @@ F:
 	movl	%esi, %eax
 	xorl	%edx, %eax
 	ret
+	.size	F, .-F
 	.globl	G
 	.type	G, @function
 G:
@@ -83,6 +90,7 @@ G:
 	movl	%edi, %eax
 	xorl	%esi, %eax
 	ret
+	.size	G, .-G
 	.globl	H
 	.type	H, @function
 H:
@@ -90,6 +98,7 @@ H:
 	movl	%esi, %eax
 	xorl	%edi, %eax
 	ret
+	.size	H, .-H
 	.globl	I
 	.type	I, @function
 I:
@@ -98,141 +107,10 @@ I:
 	movl	%edx, %eax
 	xorl	%esi, %eax
 	ret
+	.size	I, .-I
 	.section	.rodata
 	.align 32
 .LC0:
-	.byte	0
-	.byte	1
-	.byte	2
-	.byte	3
-	.byte	4
-	.byte	5
-	.byte	6
-	.byte	7
-	.byte	8
-	.byte	9
-	.byte	10
-	.byte	11
-	.byte	12
-	.byte	13
-	.byte	14
-	.byte	15
-	.byte	1
-	.byte	6
-	.byte	11
-	.byte	0
-	.byte	5
-	.byte	10
-	.byte	15
-	.byte	4
-	.byte	9
-	.byte	14
-	.byte	3
-	.byte	8
-	.byte	13
-	.byte	2
-	.byte	7
-	.byte	12
-	.byte	5
-	.byte	8
-	.byte	11
-	.byte	14
-	.byte	1
-	.byte	4
-	.byte	7
-	.byte	10
-	.byte	13
-	.byte	0
-	.byte	3
-	.byte	6
-	.byte	9
-	.byte	12
-	.byte	15
-	.byte	2
-	.byte	0
-	.byte	7
-	.byte	14
-	.byte	5
-	.byte	12
-	.byte	3
-	.byte	10
-	.byte	1
-	.byte	8
-	.byte	15
-	.byte	6
-	.byte	13
-	.byte	4
-	.byte	11
-	.byte	2
-	.byte	9
-	.align 32
-.LC1:
-	.byte	7
-	.byte	12
-	.byte	17
-	.byte	22
-	.byte	7
-	.byte	12
-	.byte	17
-	.byte	22
-	.byte	7
-	.byte	12
-	.byte	17
-	.byte	22
-	.byte	7
-	.byte	12
-	.byte	17
-	.byte	22
-	.byte	5
-	.byte	9
-	.byte	14
-	.byte	20
-	.byte	5
-	.byte	9
-	.byte	14
-	.byte	20
-	.byte	5
-	.byte	9
-	.byte	14
-	.byte	20
-	.byte	5
-	.byte	9
-	.byte	14
-	.byte	20
-	.byte	4
-	.byte	11
-	.byte	16
-	.byte	23
-	.byte	4
-	.byte	11
-	.byte	16
-	.byte	23
-	.byte	4
-	.byte	11
-	.byte	16
-	.byte	23
-	.byte	4
-	.byte	11
-	.byte	16
-	.byte	23
-	.byte	6
-	.byte	10
-	.byte	15
-	.byte	21
-	.byte	6
-	.byte	10
-	.byte	15
-	.byte	21
-	.byte	6
-	.byte	10
-	.byte	15
-	.byte	21
-	.byte	6
-	.byte	10
-	.byte	15
-	.byte	21
-	.align 32
-.LC2:
 	.long	-680876936
 	.long	-389564586
 	.long	606105819
@@ -302,71 +180,81 @@ I:
 	.type	md5_compress, @function
 md5_compress:
 	pushq	%r12
-	movl	$16, %ecx
+	movl	$64, %ecx
 	movq	%rsi, %r12
 	movl	$.LC0, %esi
 	pushq	%rbp
 	xorl	%ebp, %ebp
 	pushq	%rbx
 	movq	%rdi, %rbx
-	subq	$448, %rsp
+	subq	$352, %rsp
 	movq	(%rdi), %rax
-	movq	$FF, 32(%rsp)
-	movq	%rax, 16(%rsp)
+	movq	$FF, 64(%rsp)
+	movq	%rax, 32(%rsp)
 	movq	8(%rdi), %rax
-	leaq	64(%rsp), %rdi
+	leaq	96(%rsp), %rdi
 	rep movsl
-	movl	$.LC1, %esi
-	leaq	128(%rsp), %rdi
-	movl	$16, %ecx
-	rep movsl
-	movl	$.LC2, %esi
-	leaq	192(%rsp), %rdi
-	movl	$64, %ecx
-	rep movsl
-	movq	%rax, 24(%rsp)
-	movq	$GG, 40(%rsp)
-	movq	$HH, 48(%rsp)
-	movq	$II, 56(%rsp)
-	movl	$16909056, (%rsp)
-	movl	$33751041, 4(%rsp)
-	movl	$50331906, 8(%rsp)
-	movl	$66051, 12(%rsp)
+	movq	$GG, 72(%rsp)
+	movq	%rax, 40(%rsp)
+	movabsq	$1445102447882210311, %rax
+	movq	%rax, 48(%rsp)
+	movabsq	$1517442620720155396, %rax
+	movq	$HH, 80(%rsp)
+	movq	$II, 88(%rsp)
+	movl	$16909056, 8(%rsp)
+	movl	$33751041, 12(%rsp)
+	movl	$50331906, 16(%rsp)
+	movl	$66051, 20(%rsp)
+	movl	$327936, 24(%rsp)
+	movl	$117638401, 28(%rsp)
+	movq	%rax, 56(%rsp)
 .L11:
-	movq	%rbp, %rax
-	movsbq	64(%rsp,%rbp), %r8
-	andl	$3, %eax
-	movsbq	12(%rsp,%rax), %rdx
-	movsbq	4(%rsp,%rax), %rsi
-	movl	(%r12,%r8,4), %r8d
-	movl	16(%rsp,%rdx,4), %ecx
-	movsbq	8(%rsp,%rax), %rdx
-	movsbq	(%rsp,%rax), %rax
-	movl	16(%rsp,%rsi,4), %esi
-	movl	16(%rsp,%rdx,4), %edx
-	leaq	16(%rsp,%rax,4), %rdi
-	pushq	%rax
+	movl	%ebp, %r10d
+	movl	%ebp, %edi
 	movl	%ebp, %eax
-	movl	200(%rsp,%rbp,4), %r9d
-	sarl	$4, %eax
+	movl	$16, %ecx
+	sarl	$4, %r10d
+	andl	$3, %edi
+	andl	$15, %eax
+	leal	(%rdi,%r10,4), %r8d
+	movslq	%r10d, %r10
+	movslq	%edi, %rdi
+	movsbl	28(%rsp,%r10), %edx
+	movsbq	12(%rsp,%rdi), %rsi
+	movslq	%r8d, %r8
+	imull	%edx, %eax
+	movsbl	24(%rsp,%r10), %edx
+	movl	32(%rsp,%rsi,4), %esi
+	addl	%edx, %eax
+	cltd
+	idivl	%ecx
+	movslq	%edx, %rax
+	movsbq	20(%rsp,%rdi), %rdx
+	movl	32(%rsp,%rdx,4), %ecx
+	movsbq	16(%rsp,%rdi), %rdx
+	movsbq	8(%rsp,%rdi), %rdi
+	movl	32(%rsp,%rdx,4), %edx
+	leaq	32(%rsp,%rdi,4), %rdi
 	pushq	%r9
-	cltq
-	movsbl	144(%rsp,%rbp), %r9d
+	movl	104(%rsp,%rbp,4), %r9d
 	incq	%rbp
-	call	*48(%rsp,%rax,8)
-	popq	%rdx
-	popq	%rcx
+	pushq	%r9
+	movsbl	64(%rsp,%r8), %r9d
+	movl	(%r12,%rax,4), %r8d
+	call	*80(%rsp,%r10,8)
+	popq	%r10
+	popq	%r11
 	cmpq	$64, %rbp
 	jne	.L11
-	movl	16(%rsp), %eax
+	movl	32(%rsp), %eax
 	addl	%eax, (%rbx)
-	movl	20(%rsp), %eax
+	movl	36(%rsp), %eax
 	addl	%eax, 4(%rbx)
-	movl	24(%rsp), %eax
+	movl	40(%rsp), %eax
 	addl	%eax, 8(%rbx)
-	movl	28(%rsp), %eax
+	movl	44(%rsp), %eax
 	addl	%eax, 12(%rbx)
-	addq	$448, %rsp
+	addq	$352, %rsp
 	popq	%rbx
 	popq	%rbp
 	popq	%r12
