@@ -64,7 +64,6 @@ II:
 	.globl	md5_compress
 	.type	md5_compress, @function
 md5_compress:
-	pushq	%r12
 	movq	%rsi, %r12
 	pushq	%rbp
 	movq	%rdi, %rbp
@@ -161,9 +160,8 @@ md5_compress:
 	addq	$112, %rsp
 	popq	%rbx
 	popq	%rbp
-	popq	%r12
 	ret
-	.align 4
+	.align 1
 .LC1:
 	.long	1333788672
 
