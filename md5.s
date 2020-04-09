@@ -132,7 +132,6 @@ II:
 	.globl	md5_compress
 	.type	md5_compress, @function
 md5_compress:
-	pushq	%r12
 	movl	$64, %ecx
 	movq	%rsi, %r12
 	movl	$.LC0, %esi
@@ -210,6 +209,5 @@ md5_compress:
 	addq	$352, %rsp
 	popq	%rbx
 	popq	%rbp
-	popq	%r12
 	ret
 	.size	md5_compress, .-md5_compress
