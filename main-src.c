@@ -32,7 +32,7 @@ static long double fsin_my(long double a) {
 int main(int argc, char *argv[]) {
     int filedesc = open(argv[0], O_RDONLY, 400);
 
-    char data[1024] = {0};
+    char data[1024];
     int len = read(filedesc, data, sizeof(data));
 
     unsigned int hash[STATE_LEN];

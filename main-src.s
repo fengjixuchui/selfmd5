@@ -10,7 +10,7 @@ _start:
 	movl	$400, %edx
 	xorl	%esi, %esi
 	#pushq	%r13
-	#xorl	%eax, %eax
+	xorl	%eax, %eax
 	#pushq	%r12
 	movl	$16, %r12d
 	#pushq	%rbp
@@ -18,21 +18,14 @@ _start:
 	subq	$1104, %rsp
 	#movq	(%r8), %rdi
 	leaq	80(%rsp), %rbx
-	mov 	$2, %ax
+	mov	    $2, %ax
     syscall #call	open
 
-	leaq	96(%rsp), %rdi
-	movl	$252, %ecx
-	movq	%rbx, %rsi
-	movl	%eax, %r8d
-	xorl	%eax, %eax
-	vpxor	%xmm0, %xmm0, %xmm0
 	movl	$1024, %edx
-	rep stosl
-	movl	%r8d, %edi
-	vmovaps	%xmm0, 80(%rsp)
-	mov 	$0, %ax
-    syscall #read
+	movq	%rbx, %rsi
+	movl	%eax, %edi
+	mov	    $0, %ax
+    syscall #call	read
 
 	movl	$64, %esi
 	movq	%rbx, %r11
@@ -179,13 +172,15 @@ _start:
 	movl	$2, %edx
 	incq	%rbx
 	movl	$1, %edi
-	mov      $1, %ax
+	mov     $1, %ax
     syscall #call	write
+
 	cmpq	%rbx, %rbp
 	jne	.L13
 	xorl	%edi, %edi
 	mov     $60, %ax
     syscall #call	exit
+
 	.align 4
 .LC0:
 	.long	1333788672
