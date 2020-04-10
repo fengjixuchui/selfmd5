@@ -7,7 +7,7 @@ _start:
 
 	#pushq	%r14
 	#movq	%rsi, %rax
-	movl	$400, %edx
+	mov	    $400, %dx
 	xorl	%esi, %esi
 	#pushq	%r13
 	#pushq	%r12
@@ -19,7 +19,7 @@ _start:
 	#movq	(%rax), %rdi
 	xorl	%eax, %eax
 	leaq	80(%rsp), %rbx
-	movl	$2, %eax
+	mov  	$2, %ax
     syscall #call	open
 
 	leaq	80(%rsp), %rdi
@@ -30,7 +30,7 @@ _start:
 	movl	$1024, %edx
 	rep stosl
 	movl	%r8d, %edi
-	movl	$0, %eax
+	mov	    $0, %ax
     syscall #call	read
 
 	movl	$64, %esi
@@ -184,12 +184,12 @@ _start:
 	movl	$2, %edx
 	incq	%rbx
 	movl	$1, %edi
-	movl    $1, %eax
+	mov     $1, %ax
     syscall #call	write
 	cmpq	%rbx, %rbp
 	jne	.L13
 	xorl	%edi, %edi
-	movl    $60, %eax
+	mov     $60, %ax
     syscall #call	exit
 	.align 4
 .LC0:
