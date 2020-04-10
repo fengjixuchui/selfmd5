@@ -5,12 +5,12 @@
 _start:
     movq	8(%rsp), %rdi
 
-	pushq	%r12
+	#pushq	%r12
 	#movq	%rsi, %rax
 	movl	$400, %edx
 	xorl	%esi, %esi
-	pushq	%rbp
-	pushq	%rbx
+	#pushq	%rbp
+	#pushq	%rbx
 	subq	$5152, %rsp
 	#movq	(%rax), %rdi
 	xorl	%eax, %eax

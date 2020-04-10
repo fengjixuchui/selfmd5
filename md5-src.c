@@ -58,16 +58,13 @@ void md5_compress(WORD *input, WORD *m) {
     FuckFunc ff[] = {&FF, &GG, &HH, &II};
 
     const char p1[] = {0, 3, 2, 1};
-    const char p2[] = {1, 0, 3, 2};
-    const char p3[] = {2, 1, 0, 3};
-    const char p4[] = {3, 2, 1, 0};
     const char mmstart[] = {0, 1, 5, 0};
     const char mmstep[] = {1, 5, 3, 7};
     const char ss[] = {7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21};
     for (int i = 0; i < 64; ++i) {
         WORD t = (WORD) ((unsigned long long) 4294967296 * fsin_my(i + 1));
         FuckFunc f = ff[i / 16];
-        f(&tmp[p1[i % 4]], tmp[p2[i % 4]], tmp[p3[i % 4]], tmp[p4[i % 4]],
+        f(&tmp[p1[i % 4]], tmp[p1[(i + 3) % 4]], tmp[p1[(i + 2) % 4]], tmp[p1[(i + 1) % 4]],
           m[(mmstart[i / 16] + (i % 16) * mmstep[i / 16]) % 16], ss[(i / 16) * 4 + (i % 4)], t);
     }
 
