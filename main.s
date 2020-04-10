@@ -1,96 +1,59 @@
+	.file	"main-src.c"
 	.text
+	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
 	.string	"0123456789abcdef"
-
-	.globl	_start
-	.type	_start, @function
-_start:
-    movq	8(%rsp), %rdi
-
-	pushq	%rbp
-	movq	%rsp, %rbp
-	movq	%rsp, %r12
-	subq	$20584, %rsp
-
+	.section	.text.startup,"ax",@progbits
+	.globl	main
+	.type	main, @function
+main:
+	pushq	%r12
+	movq	%rsi, %rax
 	movl	$400, %edx
 	xorl	%esi, %esi
-	movl	$2, %eax
-	syscall #call	open
-
+	pushq	%rbp
+	movl	$data, %r12d
+	pushq	%rbx
+	movq	%r12, %rbx
+	subq	$32, %rsp
+	movq	(%rax), %rdi
+	xorl	%eax, %eax
+	call	open
 	movl	$20480, %edx
-	leaq	-20528(%r12), %rsi
-	movq	%rsi, %r13
+	movl	$data, %esi
 	movl	%eax, %edi
-	movl	$0, %eax
-	syscall #call	read
-
-	movq	%rax, %rbx
+	call	read
+	movl	$64, %esi
+	movq	%rax, %rcx
 	movabsq	$-1167088121787636991, %rax
 	movq	%rax, 16(%rsp)
-	movl	%ebx, %ebp
 	movabsq	$1167088121787636990, %rax
 	movq	%rax, 24(%rsp)
+	leal	8(%rcx), %eax
+	cltd
+	idivl	%esi
+	sall	$6, %eax
+	leal	56(%rax), %ebp
+	movslq	%ecx, %rax
+	sall	$3, %ecx
+	movb	$-128, data(%rax)
+	movslq	%ecx, %rcx
+	movslq	%ebp, %rax
+	movq	%rcx, data(%rax)
 .L2:
-	movl	%r13d, %edx
-	subl	%r12d, %edx
-	cmpl	$63, %ebp
-	jle	.L15
-	movq	%r13, %rsi
+	movl	%ebx, %eax
+	subl	%r12d, %eax
+	cmpl	%eax, %ebp
+	jle	.L8
+	movq	%rbx, %rsi
 	leaq	16(%rsp), %rdi
-	subl	$64, %ebp
-	addq	$64, %r13
+	addq	$64, %rbx
 	call	md5_compress
 	jmp	.L2
-.L15:
-	xorl	%eax, %eax
-	leaq	32(%rsp), %rdi
-	movl	$16, %ecx
-	movslq	%edx, %rdx
-	rep stosl
-	addq	%rdx, %r12
-	xorl	%eax, %eax
-.L4:
-	cmpl	%eax, %ebp
-	jle	.L16
-	movb	(%r12,%rax), %dl
-	movb	%dl, 32(%rsp,%rax)
-	incq	%rax
-	jmp	.L4
-.L16:
-	movslq	%ebp, %rax
-	movb	$-128, 32(%rsp,%rax)
-	movl	$63, %eax
-	subl	%ebp, %eax
-	cmpl	$7, %eax
-	jg	.L6
-	leaq	32(%rsp), %rsi
-	leaq	16(%rsp), %rdi
-	call	md5_compress
-	leaq	32(%rsp), %rax
-	leaq	64(%rax), %rdx
-.L7:
-	movb	$0, (%rax)
-	incq	%rax
-	cmpq	%rdx, %rax
-	jne	.L7
-.L6:
-	leal	0(,%rbx,8), %eax
-	sarl	$5, %ebx
-	movb	%al, 88(%rsp)
-	leaq	32(%rsp), %rax
-	leaq	7(%rax), %rdx
 .L8:
-	movb	%bl, 57(%rax)
-	incq	%rax
-	sarl	$8, %ebx
-	cmpq	%rax, %rdx
-	jne	.L8
-	leaq	32(%rsp), %rsi
-	leaq	16(%rsp), %rdi
-	call	md5_compress
 	leaq	16(%rsp), %rbx
 	leaq	32(%rsp), %rbp
-.L9:
+.L4:
 	movb	(%rbx), %al
 	leaq	13(%rsp), %rsi
 	movl	$1, %edi
@@ -105,10 +68,13 @@ _start:
 	movb	%al, 14(%rsp)
 	movb	%dl, 13(%rsp)
 	movl	$2, %edx
-	movl    $1, %eax
-	syscall #call	write
+	call	write
 	cmpq	%rbx, %rbp
-	jne	.L9
+	jne	.L4
 	xorl	%edi, %edi
-	movl    $60, %eax
-	syscall #call	exit
+	call	exit
+	.size	main, .-main
+	.local	data
+	.comm	data,20480,32
+	.ident	"GCC: (GNU) 8.3.0"
+	.section	.note.GNU-stack,"",@progbits
