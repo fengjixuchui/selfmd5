@@ -11,26 +11,6 @@
 #define H(x, y, z) (x ^ y ^ z)
 
 #define I(x, y, z)  (y ^ (x | ~z))
-//
-//void FF(WORD *a, WORD b, WORD c, WORD d, WORD m, WORD s, WORD t) {
-//    *a += F(b, c, d) + m + t;
-//    *a = b + ROTLEFT(*a, s);
-//}
-//
-//void GG(WORD *a, WORD b, WORD c, WORD d, WORD m, WORD s, WORD t) {
-//    *a += G(b, c, d) + m + t;
-//    *a = b + ROTLEFT(*a, s);
-//}
-//
-//void HH(WORD *a, WORD b, WORD c, WORD d, WORD m, WORD s, WORD t) {
-//    *a += H(b, c, d) + m + t;
-//    *a = b + ROTLEFT(*a, s);
-//}
-//
-//void II(WORD *a, WORD b, WORD c, WORD d, WORD m, WORD s, WORD t) {
-//    *a += I(b, c, d) + m + t;
-//    *a = b + ROTLEFT(*a, s);
-//}
 
 static long double fsin_my(long double a) {
     long double res;
@@ -52,9 +32,6 @@ void md5_compress(unsigned int *input, unsigned int *m) {
     tmp[1] = input[1];
     tmp[2] = input[2];
     tmp[3] = input[3];
-//
-//    typedef void (*FuckFunc)(WORD *a, WORD b, WORD c, WORD d, WORD m, WORD s, WORD t);
-//    FuckFunc ff[] = {&FF, &GG, &HH, &II};
 
     const char p1[] = {0, 3, 2, 1};
     const char mmstart[] = {0, 1, 5, 0};
