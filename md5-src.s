@@ -1,165 +1,116 @@
 	.file	"md5-src.c"
 	.text
-	.globl	FF
-	.type	FF, @function
-FF:
-	xorl	%ecx, %edx
-	addl	8(%rsp), %r8d
-	addl	(%rdi), %r8d
-	andl	%esi, %edx
-	xorl	%ecx, %edx
-	movl	%r9d, %ecx
-	addl	%r8d, %edx
-	roll	%cl, %edx
-	addl	%esi, %edx
-	movl	%edx, (%rdi)
-	ret
-	.size	FF, .-FF
-	.globl	GG
-	.type	GG, @function
-GG:
-	movl	%esi, %eax
-	addl	8(%rsp), %r8d
-	addl	(%rdi), %r8d
-	xorl	%edx, %eax
-	andl	%ecx, %eax
-	movl	%r9d, %ecx
-	xorl	%edx, %eax
-	addl	%r8d, %eax
-	roll	%cl, %eax
-	addl	%esi, %eax
-	movl	%eax, (%rdi)
-	ret
-	.size	GG, .-GG
-	.globl	HH
-	.type	HH, @function
-HH:
-	xorl	%ecx, %edx
-	addl	8(%rsp), %r8d
-	movl	%r9d, %ecx
-	xorl	%esi, %edx
-	addl	%r8d, %edx
-	addl	(%rdi), %edx
-	roll	%cl, %edx
-	addl	%esi, %edx
-	movl	%edx, (%rdi)
-	ret
-	.size	HH, .-HH
-	.globl	II
-	.type	II, @function
-II:
-	movl	%ecx, %eax
-	addl	8(%rsp), %r8d
-	addl	(%rdi), %r8d
-	movl	%r9d, %ecx
-	notl	%eax
-	orl	%esi, %eax
-	xorl	%edx, %eax
-	addl	%r8d, %eax
-	roll	%cl, %eax
-	addl	%esi, %eax
-	movl	%eax, (%rdi)
-	ret
-	.size	II, .-II
 	.globl	md5_compress
 	.type	md5_compress, @function
 md5_compress:
-	pushq	%r12
-	movq	%rsi, %r12
-	xorl	%esi, %esi
 	pushq	%rbp
-	pushq	%rbx
-	movq	%rdi, %rbx
-	subq	$96, %rsp
 	movq	(%rdi), %rax
-	movq	$FF, 64(%rsp)
-	movq	%rax, 32(%rsp)
+	xorl	%ecx, %ecx
+	movl	$16, %r10d
+	pushq	%rbx
+	movq	%rax, -40(%rsp)
 	movq	8(%rdi), %rax
-	movq	$GG, 72(%rsp)
-	movq	%rax, 40(%rsp)
+	movl	$16909056, -52(%rsp)
+	movq	%rax, -32(%rsp)
 	movabsq	$1445102447882210311, %rax
-	movq	%rax, 48(%rsp)
+	movq	%rax, -24(%rsp)
 	movabsq	$1517442620720155396, %rax
-	movq	$HH, 80(%rsp)
-	movq	$II, 88(%rsp)
-	movl	$16909056, 20(%rsp)
-	movl	$327936, 24(%rsp)
-	movl	$117638401, 28(%rsp)
-	movq	%rax, 56(%rsp)
+	movl	$327936, -48(%rsp)
+	movl	$117638401, -44(%rsp)
+	movq	%rax, -16(%rsp)
 .L6:
-	leal	1(%rsi), %ebp
-	movl	%ebp, 8(%rsp)
-	fildl	8(%rsp)
+	leal	3(%rcx), %eax
+	leal	1(%rcx), %r9d
+	movl	%ecx, %r8d
+	andl	$3, %eax
+	movl	%r9d, %edx
+	sarl	$4, %r8d
+	movsbq	-52(%rsp,%rax), %rax
+	andl	$3, %edx
+	movsbq	-52(%rsp,%rdx), %rdx
+	movl	-40(%rsp,%rax,4), %r11d
+	leal	2(%rcx), %eax
+	andl	$3, %eax
+	movl	-40(%rsp,%rdx,4), %ebx
+	movsbq	-52(%rsp,%rax), %rax
+	movl	-40(%rsp,%rax,4), %eax
+	cmpl	$2, %r8d
+	je	.L2
+	cmpl	$3, %r8d
+	je	.L3
+	cmpl	$1, %r8d
+	je	.L4
+	xorl	%ebx, %eax
+	andl	%r11d, %eax
+	jmp	.L9
+.L4:
+	movl	%r11d, %edx
+	xorl	%eax, %edx
+	andl	%edx, %ebx
+	jmp	.L9
+.L2:
+	xorl	%r11d, %eax
+	jmp	.L9
+.L3:
+	notl	%ebx
+	orl	%r11d, %ebx
+.L9:
+	movslq	%r8d, %rbp
+	xorl	%eax, %ebx
+	movl	%ecx, %eax
+	movl	%r9d, -64(%rsp)
+	movsbl	-44(%rsp,%rbp), %edx
+	fildl	-64(%rsp)
+	andl	$15, %eax
+	imull	%edx, %eax
+	movsbl	-48(%rsp,%rbp), %edx
+	addl	%edx, %eax
+	cltd
+	idivl	%r10d
+	movslq	%edx, %rax
+	movl	(%rsi,%rax,4), %edx
+	movl	%ecx, %eax
+	andl	$3, %eax
+	leal	(%rax,%r8,4), %ecx
+	movslq	%ecx, %rcx
+	movsbl	-24(%rsp,%rcx), %ecx
 #APP
-# 39 "md5-src.c" 1
+# 38 "md5-src.c" 1
 	fsin
 	
 # 0 "" 2
 #NO_APP
-	movl	%esi, %r10d
-	movl	%esi, %edi
-	movl	%esi, %eax
-	movl	$16, %ecx
 	fabs
-	sarl	$4, %r10d
-	andl	$3, %edi
-	andl	$15, %eax
-	leal	(%rdi,%r10,4), %r9d
 	fmuls	.LC0(%rip)
-	movslq	%r10d, %r10
-	movslq	%edi, %rdi
-	movsbl	28(%rsp,%r10), %edx
-	movsbq	20(%rsp,%rdi), %rdi
-	movslq	%r9d, %r9
-	imull	%edx, %eax
-	movsbl	24(%rsp,%r10), %edx
-	leaq	32(%rsp,%rdi,4), %rdi
-	addl	%edx, %eax
-	cltd
-	idivl	%ecx
-	movslq	%edx, %rax
-	movl	%ebp, %edx
-	andl	$3, %edx
-	movsbq	20(%rsp,%rdx), %rdx
-	movl	32(%rsp,%rdx,4), %ecx
-	leal	2(%rsi), %edx
-	addl	$3, %esi
-	andl	$3, %edx
-	andl	$3, %esi
-	movsbq	20(%rsp,%rdx), %rdx
-	movsbq	20(%rsp,%rsi), %rsi
-	movl	32(%rsp,%rdx,4), %edx
-	movl	32(%rsp,%rsi,4), %esi
-	pushq	%r8
-	fnstcw	22(%rsp)
-	movw	22(%rsp), %r8w
-	orw	$3072, %r8w
-	movw	%r8w, 20(%rsp)
-	fldcw	20(%rsp)
-	fistpq	8(%rsp)
-	fldcw	22(%rsp)
-	movq	8(%rsp), %r8
-	pushq	%r8
-	movl	(%r12,%rax,4), %r8d
-	movsbl	64(%rsp,%r9), %r9d
-	call	*80(%rsp,%r10,8)
-	popq	%r9
-	movl	%ebp, %esi
-	popq	%r10
-	cmpl	$64, %ebp
+	cltq
+	movsbq	-52(%rsp,%rax), %rbp
+	fnstcw	-58(%rsp)
+	movw	-58(%rsp), %ax
+	orb	$12, %ah
+	movw	%ax, -60(%rsp)
+	fldcw	-60(%rsp)
+	fistpq	-72(%rsp)
+	fldcw	-58(%rsp)
+	movq	-72(%rsp), %r8
+	addl	-40(%rsp,%rbp,4), %edx
+	leal	(%rdx,%rbx), %eax
+	addl	%r8d, %eax
+	roll	%cl, %eax
+	movl	%r9d, %ecx
+	addl	%r11d, %eax
+	movl	%eax, -40(%rsp,%rbp,4)
+	cmpl	$64, %r9d
 	jne	.L6
-	movl	32(%rsp), %eax
-	addl	%eax, (%rbx)
-	movl	36(%rsp), %eax
-	addl	%eax, 4(%rbx)
-	movl	40(%rsp), %eax
-	addl	%eax, 8(%rbx)
-	movl	44(%rsp), %eax
-	addl	%eax, 12(%rbx)
-	addq	$96, %rsp
+	movl	-40(%rsp), %eax
+	addl	%eax, (%rdi)
+	movl	-36(%rsp), %eax
+	addl	%eax, 4(%rdi)
+	movl	-32(%rsp), %eax
+	addl	%eax, 8(%rdi)
+	movl	-28(%rsp), %eax
 	popq	%rbx
+	addl	%eax, 12(%rdi)
 	popq	%rbp
-	popq	%r12
 	ret
 	.size	md5_compress, .-md5_compress
 	.align 4
