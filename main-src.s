@@ -149,38 +149,36 @@ _start:
 	addl	%eax, 44(%rsp)
 	jmp	.L2
 .L19:
-	leaq	32(%rsp), %rbx
-	leaq	48(%rsp), %rbp
-.L13:
-	movb	(%rbx), %al
-	movl	%eax, %edx
-	andl	$15, %eax
-	shrb	$4, %dl
-	leal	48(%rdx), %ecx
-	cmpb	$9, %dl
-	jbe	.L10
-	leal	87(%rdx), %ecx
-.L10:
-	movb	%cl, 64(%rsp)
-	leal	48(%rax), %edx
-	cmpb	$9, %al
-	jbe	.L12
-	leal	87(%rax), %edx
+	xorl	%ebx, %ebx
 .L12:
-	movb	%dl, 65(%rsp)
+	movl	%ebx, %eax
+	movl	%ebx, %edx
+	shrb	%al
+	andl	$1, %edx
+	cmpb	$1, %dl
+	movzbl	%al, %eax
+	sbbl	%ecx, %ecx
+	movzbl	32(%rsp,%rax), %eax
+	andl	$4, %ecx
+	sarl	%cl, %eax
+	andl	$15, %eax
+	leal	48(%rax), %edx
+	cmpl	$9, %eax
+	jle	.L11
+	leal	87(%rax), %edx
+.L11:
+	movb	%dl, 64(%rsp)
 	leaq	64(%rsp), %rsi
-	mov	    $2, %dl
-	incq	%rbx
-	mov 	$1, %di
+	mov	    $1, %dl
+	incl	%ebx
+	mov	    $1, %dil
 	mov     $1, %al
     syscall #call	write
-
-	cmpq	%rbx, %rbp
-	jne	.L13
+	cmpb	$32, %bl
+	jne	.L12
 	xorl	%edi, %edi
 	mov     $60, %al
     syscall #call	exit
-
 	.align 4
 .LC0:
 	.long	1333788672

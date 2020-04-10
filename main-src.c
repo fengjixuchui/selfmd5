@@ -94,14 +94,10 @@ int main(int argc, char *argv[]) {
     }
 
     unsigned char *buf = (unsigned char *) &hash;
-    int i;
-    for (i = 0; i < 16; i++) {
-        char tmp[2];
-        int a = (buf[i] >> 4) & 0xF;
-        int b = (buf[i]) & 0xF;
-        tmp[0] = a >= 10 ? 'a' + (a - 10) : '0' + a;
-        tmp[1] = b >= 10 ? 'a' + (b - 10) : '0' + b;
-        write(1, tmp, 2);
+    for (unsigned char i = 0; i < 32; i++) {
+        int a = (buf[i / 2] >> (4 * (1 - i % 2))) & 0xF;
+        char c = a >= 10 ? 'a' + (a - 10) : '0' + a;
+        write(1, &c, 1);
     }
 
     exit(0);
