@@ -42,7 +42,7 @@ _start:
 	sal	    $6, %ax
 	leal	56(%rax), %ebp
 	movslq	%ecx, %rax
-	sall	$3, %ecx
+	sal 	$3, %cx
 	movb	$-128, 80(%rsp,%rax)
 	movslq	%ecx, %rcx
 	movslq	%ebp, %rax
@@ -66,24 +66,24 @@ _start:
 	leal	3(%rdi), %eax
 	movl	%edi, %r13d
 	movl	%edi, %ecx
-	andl	$3, %eax
+	and 	$3, %eax
 	sarl	$4, %r13d
 	movsbq	20(%rsp,%rax), %rax
 	movl	48(%rsp,%rax,4), %r10d
 	leal	2(%rdi), %eax
 	incl	%edi
-	andl	$3, %eax
+	and	    $3, %eax
 	movsbq	20(%rsp,%rax), %rax
 	movl	48(%rsp,%rax,4), %esi
 	movl	%edi, %eax
-	andl	$3, %eax
+	and	    $3, %eax
 	movsbq	20(%rsp,%rax), %rax
 	movl	48(%rsp,%rax,4), %eax
-	cmpl	$2, %r13d
+	cmp	    $2, %r13d
 	je	.L3
-	cmpl	$3, %r13d
+	cmp	    $3, %r13d
 	je	.L4
-	cmpl	$1, %r13d
+	cmp	    $1, %r13d
 	je	.L5
 	xorl	%eax, %esi
 	andl	%r10d, %esi
@@ -103,7 +103,7 @@ _start:
 	movslq	%r13d, %r14
 	xorl	%eax, %esi
 	movl	%ecx, %eax
-	andl	$3, %ecx
+	and 	$3, %ecx
 	movsbl	28(%rsp,%r14), %edx
 	andl	$15, %eax
 	movl	%edi, 8(%rsp)
@@ -169,7 +169,7 @@ _start:
 .L12:
 	movb	%dl, 65(%rsp)
 	leaq	64(%rsp), %rsi
-	mov	    $2, %dx
+	mov	    $2, %dl
 	incq	%rbx
 	mov 	$1, %di
 	mov     $1, %al
