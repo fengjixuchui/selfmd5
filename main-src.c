@@ -1,5 +1,6 @@
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #define BLOCK_LEN 64  // In bytes
 #define STATE_LEN 4  // In words

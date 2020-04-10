@@ -6,36 +6,38 @@ _start:
     movq	8(%rsp), %rdi
 
 	#pushq	%r14
-	#movq	%rsi, %rax
-	mov	    $400, %dx
+	#movq	%rsi, %r8
+	movl	$400, %edx
 	xorl	%esi, %esi
 	#pushq	%r13
+	#xorl	%eax, %eax
 	#pushq	%r12
-	movabsq	$1517442620720155396, %r12
+	movl	$16, %r12d
 	#pushq	%rbp
-	movabsq	$1445102447882210311, %rbp
 	#pushq	%rbx
 	subq	$1104, %rsp
-	#movq	(%rax), %rdi
-	xorl	%eax, %eax
+	#movq	(%r8), %rdi
 	leaq	80(%rsp), %rbx
-	mov  	$2, %ax
+	mov 	$2, %ax
     syscall #call	open
 
-	leaq	80(%rsp), %rdi
-	movl	$256, %ecx
+	leaq	96(%rsp), %rdi
+	movl	$252, %ecx
 	movq	%rbx, %rsi
 	movl	%eax, %r8d
 	xorl	%eax, %eax
+	vpxor	%xmm0, %xmm0, %xmm0
 	movl	$1024, %edx
 	rep stosl
 	movl	%r8d, %edi
-	mov	    $0, %ax
-    syscall #call	read
+	vmovaps	%xmm0, 80(%rsp)
+	mov 	$0, %ax
+    syscall #read
 
 	movl	$64, %esi
-	movq	%rbx, %r8
-	movl	$16, %r11d
+	movq	%rbx, %r11
+	movabsq	$1445102447882210311, %r8
+	movabsq	$1517442620720155396, %r9
 	movq	%rax, %rcx
 	movabsq	$-1167088121787636991, %rax
 	movq	%rax, 32(%rsp)
@@ -45,41 +47,42 @@ _start:
 	cltd
 	idivl	%esi
 	sall	$6, %eax
-	leal	56(%rax), %r10d
+	leal	56(%rax), %ebp
 	movslq	%ecx, %rax
 	sall	$3, %ecx
 	movb	$-128, 80(%rsp,%rax)
 	movslq	%ecx, %rcx
-	movslq	%r10d, %rax
+	movslq	%ebp, %rax
 	movq	%rcx, 80(%rsp,%rax)
 .L2:
-	movl	%r8d, %eax
+	movl	%r11d, %eax
 	subl	%ebx, %eax
-	cmpl	%eax, %r10d
+	cmpl	%eax, %ebp
 	jle	.L19
 	movq	32(%rsp), %rax
-	movq	%rbp, 64(%rsp)
-	xorl	%ecx, %ecx
+	movq	%r8, 64(%rsp)
+	xorl	%edi, %edi
 	movl	$16909056, 20(%rsp)
 	movq	%rax, 48(%rsp)
 	movq	40(%rsp), %rax
 	movl	$327936, 24(%rsp)
 	movq	%rax, 56(%rsp)
 	movl	$117638401, 28(%rsp)
-	movq	%r12, 72(%rsp)
+	movq	%r9, 72(%rsp)
 .L7:
-	leal	3(%rcx), %eax
-	leal	1(%rcx), %r9d
-	movl	%ecx, %r13d
+	leal	3(%rdi), %eax
+	movl	%edi, %r13d
+	movl	%edi, %ecx
 	andl	$3, %eax
 	sarl	$4, %r13d
 	movsbq	20(%rsp,%rax), %rax
-	movl	48(%rsp,%rax,4), %edi
-	leal	2(%rcx), %eax
+	movl	48(%rsp,%rax,4), %r10d
+	leal	2(%rdi), %eax
+	incl	%edi
 	andl	$3, %eax
 	movsbq	20(%rsp,%rax), %rax
 	movl	48(%rsp,%rax,4), %esi
-	movl	%r9d, %eax
+	movl	%edi, %eax
 	andl	$3, %eax
 	movsbq	20(%rsp,%rax), %rax
 	movl	48(%rsp,%rax,4), %eax
@@ -90,19 +93,19 @@ _start:
 	cmpl	$1, %r13d
 	je	.L5
 	xorl	%eax, %esi
-	andl	%edi, %esi
+	andl	%r10d, %esi
 	jmp	.L17
 .L5:
-	movl	%edi, %edx
+	movl	%r10d, %edx
 	xorl	%esi, %edx
 	andl	%edx, %eax
 	jmp	.L17
 .L3:
-	xorl	%edi, %esi
+	xorl	%r10d, %esi
 	jmp	.L17
 .L4:
 	notl	%eax
-	orl	%edi, %eax
+	orl	%r10d, %eax
 .L17:
 	movslq	%r13d, %r14
 	xorl	%eax, %esi
@@ -110,48 +113,40 @@ _start:
 	andl	$3, %ecx
 	movsbl	28(%rsp,%r14), %edx
 	andl	$15, %eax
-	movl	%r9d, 8(%rsp)
+	movl	%edi, 8(%rsp)
 	fildl	8(%rsp)
 	imull	%edx, %eax
 	movsbl	24(%rsp,%r14), %edx
 	addl	%edx, %eax
 	cltd
-	idivl	%r11d
+	idivl	%r12d
 	movslq	%edx, %rax
-	leal	(%rcx,%r13,4), %edx
-	movslq	%edx, %rdx
-	movl	(%r8,%rax,4), %eax
-	movsbl	64(%rsp,%rdx), %r13d
+	movslq	%ecx, %rdx
+	leal	(%rdx,%r13,4), %ecx
+	movl	(%r11,%rax,4), %eax
+	movslq	%ecx, %rcx
+	movsbl	64(%rsp,%rcx), %ecx
 #APP
-# 23 "main-src.c" 1
+# 24 "main-src.c" 1
 	fsin
 	
 # 0 "" 2
 #NO_APP
 	fabs
 	fmuls	.LC0(%rip)
-	movslq	%ecx, %rcx
-	movsbq	20(%rsp,%rcx), %rdx
-	movl	%r13d, %ecx
+	movsbq	20(%rsp,%rdx), %rdx
 	addl	48(%rsp,%rdx,4), %eax
-	fnstcw	14(%rsp)
 	addl	%eax, %esi
-	movw	14(%rsp), %ax
-	orb	$12, %ah
-	movw	%ax, 12(%rsp)
-	fldcw	12(%rsp)
-	fistpq	(%rsp)
-	fldcw	14(%rsp)
-	movq	(%rsp), %rax
-	addl	%eax, %esi
+	fisttpq	8(%rsp)
+	movq	8(%rsp), %r14
+	addl	%r14d, %esi
 	roll	%cl, %esi
-	movl	%r9d, %ecx
-	addl	%esi, %edi
-	movl	%edi, 48(%rsp,%rdx,4)
-	cmpl	$64, %r9d
+	addl	%esi, %r10d
+	movl	%r10d, 48(%rsp,%rdx,4)
+	cmpl	$64, %edi
 	jne	.L7
 	movl	48(%rsp), %eax
-	addq	$64, %r8
+	addq	$64, %r11
 	addl	%eax, 32(%rsp)
 	movl	52(%rsp), %eax
 	addl	%eax, 36(%rsp)
@@ -162,7 +157,7 @@ _start:
 	jmp	.L2
 .L19:
 	leaq	32(%rsp), %rbx
-	leaq	16(%rbx), %rbp
+	leaq	48(%rsp), %rbp
 .L13:
 	movb	(%rbx), %al
 	movl	%eax, %edx
@@ -184,7 +179,7 @@ _start:
 	movl	$2, %edx
 	incq	%rbx
 	movl	$1, %edi
-	mov     $1, %ax
+	mov      $1, %ax
     syscall #call	write
 	cmpq	%rbx, %rbp
 	jne	.L13
