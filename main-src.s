@@ -7,118 +7,113 @@ _start:
 
 	#pushq	%r14
 	#movq	%rsi, %r8
-	mov 	$400, %dx
+	xorl	%edx, %edx
 	xorl	%esi, %esi
 	#pushq	%r13
-	xorl	%eax, %eax
+	#xorl	%eax, %eax
 	#pushq	%r12
-	mov	    $16, %r12b
+	mov 	$16, %r12b
 	#pushq	%rbp
+	#xorl	%ebp, %ebp
 	#pushq	%rbx
 	subq	$1104, %rsp
 	#movq	(%r8), %rdi
-	leaq	80(%rsp), %rbx
 	mov	    $2, %al
-    syscall #call	open
+    syscall #syscall#call	open
 
 	mov 	$1024, %dx
-	movq	%rbx, %rsi
+	leaq	80(%rsp), %rsi
 	movl	%eax, %edi
-	mov	    $0, %al
-    syscall #call	read
+	mov 	$0, %al
+    syscall #syscall#call	read
 
 	movl	$64, %esi
-	movq	%rbx, %r11
-	movabsq	$1445102447882210311, %r8
-	movabsq	$1517442620720155396, %r9
-	movq	%rax, %rcx
-	movabsq	$-1167088121787636991, %rax
-	movq	%rax, 32(%rsp)
-	movabsq	$1167088121787636990, %rax
-	movq	%rax, 40(%rsp)
+	vmovdqa	.LC0(%rip), %xmm0
+	movabsq	$1445102447882210311, %r10
+	movabsq	$1517442620720155396, %r11
+	movswl	%ax, %ecx
 	leal	8(%rcx), %eax
+	vmovaps	%xmm0, 32(%rsp)
 	cltd
 	idivl	%esi
-	sal	    $6, %ax
-	leal	56(%rax), %ebp
+	sall	$6, %eax
+	leal	56(%rax), %r8d
 	movslq	%ecx, %rax
-	sal 	$3, %cx
+	sall	$3, %ecx
 	movb	$-128, 80(%rsp,%rax)
 	movslq	%ecx, %rcx
-	movslq	%ebp, %rax
+	movswq	%r8w, %rax
 	movq	%rcx, 80(%rsp,%rax)
 .L2:
-	movl	%r11d, %eax
-	subl	%ebx, %eax
-	cmpl	%eax, %ebp
-	jle	.L19
-	movq	32(%rsp), %rax
-	movq	%r8, 64(%rsp)
-	xorl	%edi, %edi
+	cmpw	%r8w, %bp
+	jge	.L19
+	vmovdqa	32(%rsp), %xmm1
+	movq	%r10, 64(%rsp)
+	xorl	%r9d, %r9d
+	movswq	%bp, %r13
 	movl	$16909056, 20(%rsp)
-	movq	%rax, 48(%rsp)
-	movq	40(%rsp), %rax
 	movl	$327936, 24(%rsp)
-	movq	%rax, 56(%rsp)
 	movl	$117638401, 28(%rsp)
-	movq	%r9, 72(%rsp)
+	movq	%r11, 72(%rsp)
+	vmovaps	%xmm1, 48(%rsp)
 .L7:
-	leal	3(%rdi), %eax
-	movl	%edi, %r13d
-	movl	%edi, %ecx
-	and 	$3, %eax
-	sarl	$4, %r13d
+	leal	3(%r9), %eax
+	movl	%r9d, %r14d
+	movl	%r9d, %ecx
+	andl	$3, %eax
+	sarl	$4, %r14d
 	movsbq	20(%rsp,%rax), %rax
-	movl	48(%rsp,%rax,4), %r10d
-	leal	2(%rdi), %eax
-	incl	%edi
-	and	    $3, %eax
+	movl	48(%rsp,%rax,4), %ebx
+	leal	2(%r9), %eax
+	incl	%r9d
+	andl	$3, %eax
 	movsbq	20(%rsp,%rax), %rax
 	movl	48(%rsp,%rax,4), %esi
-	movl	%edi, %eax
-	and	    $3, %eax
+	movl	%r9d, %eax
+	andl	$3, %eax
 	movsbq	20(%rsp,%rax), %rax
 	movl	48(%rsp,%rax,4), %eax
-	cmp	    $2, %r13d
+	cmpl	$2, %r14d
 	je	.L3
-	cmp	    $3, %r13d
+	cmpl	$3, %r14d
 	je	.L4
-	cmp	    $1, %r13d
+	cmpl	$1, %r14d
 	je	.L5
 	xorl	%eax, %esi
-	andl	%r10d, %esi
+	andl	%ebx, %esi
 	jmp	.L17
 .L5:
-	movl	%r10d, %edx
+	movl	%ebx, %edx
 	xorl	%esi, %edx
 	andl	%edx, %eax
 	jmp	.L17
 .L3:
-	xorl	%r10d, %esi
+	xorl	%ebx, %esi
 	jmp	.L17
 .L4:
 	notl	%eax
-	orl	%r10d, %eax
+	orl	%ebx, %eax
 .L17:
-	movslq	%r13d, %r14
+	movslq	%r14d, %rdi
 	xorl	%eax, %esi
 	movl	%ecx, %eax
-	and 	$3, %ecx
-	movsbl	28(%rsp,%r14), %edx
-	andl	$15, %eax
-	movl	%edi, 8(%rsp)
+	movl	%r9d, 8(%rsp)
+	movsbl	28(%rsp,%rdi), %edx
 	fildl	8(%rsp)
+	andl	$15, %eax
 	imull	%edx, %eax
-	movsbl	24(%rsp,%r14), %edx
+	movsbl	24(%rsp,%rdi), %edx
 	addl	%edx, %eax
 	cltd
 	idivl	%r12d
 	movslq	%edx, %rax
-	movslq	%ecx, %rdx
-	leal	(%rdx,%r13,4), %ecx
-	movl	(%r11,%rax,4), %eax
-	movslq	%ecx, %rcx
-	movsbl	64(%rsp,%rcx), %ecx
+	leaq	1104(%rsp,%rax,4), %rax
+	movl	-1024(%r13,%rax), %edi
+	movl	%ecx, %eax
+	andl	$3, %eax
+	leal	(%rax,%r14,4), %edx
+	movslq	%edx, %rdx
+	movsbl	64(%rsp,%rdx), %ecx
 #APP
 # 24 "main-src.c" 1
 	fsin
@@ -126,27 +121,23 @@ _start:
 # 0 "" 2
 #NO_APP
 	fabs
-	fmuls	.LC0(%rip)
-	movsbq	20(%rsp,%rdx), %rdx
-	addl	48(%rsp,%rdx,4), %eax
-	addl	%eax, %esi
+	fmuls	.LC1(%rip)
+	cltq
+	movsbq	20(%rsp,%rax), %rax
+	addl	48(%rsp,%rax,4), %edi
 	fisttpq	8(%rsp)
-	movq	8(%rsp), %r14
-	addl	%r14d, %esi
+	movq	8(%rsp), %rdx
+	addl	%edi, %esi
+	addl	%edx, %esi
 	roll	%cl, %esi
-	addl	%esi, %r10d
-	movl	%r10d, 48(%rsp,%rdx,4)
-	cmpl	$64, %edi
+	addl	%esi, %ebx
+	movl	%ebx, 48(%rsp,%rax,4)
+	cmpl	$64, %r9d
 	jne	.L7
-	movl	48(%rsp), %eax
-	addq	$64, %r11
-	addl	%eax, 32(%rsp)
-	movl	52(%rsp), %eax
-	addl	%eax, 36(%rsp)
-	movl	56(%rsp), %eax
-	addl	%eax, 40(%rsp)
-	movl	60(%rsp), %eax
-	addl	%eax, 44(%rsp)
+	vmovdqa	32(%rsp), %xmm2
+	vpaddd	48(%rsp), %xmm2, %xmm0
+	addl	$64, %ebp
+	vmovaps	%xmm0, 32(%rsp)
 	jmp	.L2
 .L19:
 	xorl	%ebx, %ebx
@@ -163,22 +154,28 @@ _start:
 	sarl	%cl, %eax
 	andl	$15, %eax
 	leal	48(%rax), %edx
-	cmpl	$9, %eax
+	cmpb	$9, %al
 	jle	.L11
 	leal	87(%rax), %edx
 .L11:
 	movb	%dl, 64(%rsp)
 	leaq	64(%rsp), %rsi
-	mov	    $1, %dl
+	mov 	$1, %dl
 	incl	%ebx
-	mov	    $1, %dil
+	mov 	$1, %edi
 	mov     $1, %al
-    syscall #call	write
+	syscall#call	write
 	cmpb	$32, %bl
 	jne	.L12
 	xorl	%edi, %edi
 	mov     $60, %al
-    syscall #call	exit
-	.align 4
+	syscall#call	exit
+	.align 16
 .LC0:
+	.long	1732584193
+	.long	-271733879
+	.long	-1732584194
+	.long	271733878
+	.align 4
+.LC1:
 	.long	1333788672
