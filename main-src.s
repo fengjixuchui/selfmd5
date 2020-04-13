@@ -22,7 +22,7 @@ _start:
 	xor	    %al, %al
     syscall #call	read
 
-	vmovdqa	.LC0(%rip), %xmm0
+	vmovdqu	.LC0(%rip), %xmm0
 	xorl	%r8d, %r8d
 	movabsq	$1445102447882210311, %rsi
 	movswq	%ax, %rdx
@@ -157,13 +157,10 @@ _start:
 	xorl	%edi, %edi
 	mov	    $60, %al
     syscall #call	exit
-
-	.align 16
 .LC0:
-	.long	-1076239813
-	.long	381145347
-	.long	-452070223
-	.long	277220974
-	.align 4
+	.long	1134044735
+	.long	1070356677
+	.long	-1873822489
+	.long	-1117647624
 .LC1:
 	.long	1333788672
