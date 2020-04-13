@@ -3,9 +3,6 @@
 #include <stdlib.h>
 
 #define BLOCK_LEN 64  // In bytes
-#define STATE_LEN 4  // In words
-
-#define BYTE unsigned char
 
 /****************************** MACROS ******************************/
 #define ROTLEFT(a, b)  ((a << b) | (a >> (32 - b)))
@@ -33,62 +30,61 @@ typedef unsigned int v4si __attribute__ ((vector_size (16)));
 
 int main(int argc, char *argv[]) {
     char data[1024];
-    register short len = read(open(argv[0], 0, 0), data, sizeof(data));
+    short len = read(open(argv[0], 0, 0), data, sizeof(data));
 
     v4si hash = {(unsigned int) (0x67452301), (unsigned int) (0xEFCDAB89), (unsigned int) (0x98BADCFE),
                  (unsigned int) (0x10325476)};
 
-    register short new_len = ((((len + 8) / 64) + 1) * 64) - 8;
+    short new_len = ((((len + 8) / 64) + 1) * 64) - 8;
+    short off = new_len - (new_len % 64);
+
     data[len] = 0x80;
     *(unsigned long long *) (data + new_len) = len << 3;
-    register short off = 0;
-    for (off = 0; off < new_len; off += BLOCK_LEN) {
-        register unsigned int *m = (unsigned int *) &data[off];
+    unsigned int *m = (unsigned int *) &data[off];
 
-        v4si tmp = hash;
+    v4si tmp = hash;
 
+    for (char i = 0; i < 64; ++i) {
         const char p1[] = {0, 3, 2, 1};
         const char mmstart[] = {0, 1, 5, 0};
         const char mmstep[] = {1, 5, 3, 7};
         const char ss[] = {7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21};
-        for (int i = 0; i < 64; ++i) {
-            register unsigned int inc;
-            register unsigned int b = tmp[p1[(i + 3) % 4]];
-            register unsigned int c = tmp[p1[(i + 2) % 4]];
-            register unsigned int d = tmp[p1[(i + 1) % 4]];
-            switch (i / 16) {
-                case 0:
-                    inc = F(b, c, d);
-                    break;
-                case 1:
-                    inc = G(b, c, d);
-                    break;
-                case 2:
-                    inc = H(b, c, d);
-                    break;
-                case 3:
-                    inc = I(b, c, d);
-                    break;
-            }
 
-            register unsigned int mm = m[(mmstart[i / 16] + (i % 16) * mmstep[i / 16]) % 16];
-            register unsigned int s = ss[(i / 16) * 4 + (i % 4)];
-            register unsigned int t = (unsigned int) ((unsigned long long) 4294967296 * fsin_my(i + 1));
-
-            tmp[p1[i % 4]] += inc + mm + t;
-            tmp[p1[i % 4]] = b + ROTLEFT(tmp[p1[i % 4]], s);
+        unsigned int inc;
+        unsigned int b = tmp[p1[(i + 3) % 4]];
+        unsigned int c = tmp[p1[(i + 2) % 4]];
+        unsigned int d = tmp[p1[(i + 1) % 4]];
+        switch (i / 16) {
+            case 0:
+                inc = F(b, c, d);
+                break;
+            case 1:
+                inc = G(b, c, d);
+                break;
+            case 2:
+                inc = H(b, c, d);
+                break;
+            case 3:
+                inc = I(b, c, d);
+                break;
         }
 
-        hash += tmp;
+        unsigned int mm = m[(mmstart[i / 16] + (i % 16) * mmstep[i / 16]) % 16];
+        unsigned int s = ss[(i / 16) * 4 + (i % 4)];
+        unsigned int t = (unsigned int) ((unsigned long long) 4294967296 * fsin_my(i + 1));
+
+        tmp[p1[i % 4]] += inc + mm + t;
+        tmp[p1[i % 4]] = b + ROTLEFT(tmp[p1[i % 4]], s);
     }
 
-    register unsigned char *buf = (unsigned char *) &hash[0];
+    hash += tmp;
+
+    unsigned char *buf = (unsigned char *) &hash[0];
     for (unsigned char i = 0; i < 32; i++) {
-        register char a = (buf[i / 2] >> (4 * (1 - i % 2))) & 0xF;
+        char a = (buf[i / 2] >> (4 * (1 - i % 2))) & 0xF;
         char c = a >= 10 ? 'a' + (a - 10) : '0' + a;
         write(1, &c, 1);
     }
 
     exit(0);
 }
-

@@ -121,8 +121,6 @@ int main(int argc, char *argv[]) {
         hash += tmp;
     }
 
-    off -= BLOCK_LEN;
-
     write(1, "\n", 1);
     printf("off=%d len=%d new_len=%d\n", off, len, new_len);
     write(1, "\n", 1);
@@ -166,7 +164,6 @@ int main(int argc, char *argv[]) {
     printf("%d\n", (int) hash[3]);
     write(1, "\n", 1);
 
-    off += BLOCK_LEN;
     unsigned int *m = (unsigned int *) &data[off];
 
     v4si tmp = hash;
