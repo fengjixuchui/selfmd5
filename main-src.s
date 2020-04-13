@@ -1,128 +1,112 @@
-	.file	"main-new.c"
+	.file	"main-src.c"
 	.text
 	.globl	_start
 	.type	_start, @function
 _start:
     movq	8(%rsp), %rdi
 
-	#pushq	%r12
+	#pushq	%rbp
 	#movq	%rsi, %r8
 	#xorl	%edx, %edx
 	#xorl	%esi, %esi
-	#pushq	%rbp
-	#xorl	%eax, %eax
 	#pushq	%rbx
-	subq	$1104, %rsp
+	#xorl	%eax, %eax
+	subq	$11120, %rsp
 	#movq	(%r8), %rdi
-	mov	$2, %al
+	mov	    $2, %al
     syscall #call	open
 
-	movl	$1024, %edx
+	mov	    $1024, %dx
 	leaq	80(%rsp), %rsi
-	movl    %eax, %edi
+	movl	%eax, %edi
 	xor	    %al, %al
     syscall #call	read
 
-	movl	$64, %edi
 	vmovdqa	.LC0(%rip), %xmm0
-	movabsq	$1445102447882210311, %r8
-	movswl	%ax, %esi
-	movl	$16, %r10d
-	movabsq	$1517442620720155396, %r9
-	leal	8(%rsi), %eax
+	xorl	%r8d, %r8d
+	movabsq	$1445102447882210311, %rsi
+	movswq	%ax, %rdx
+	mov	    $16, %r9b
+	movabsq	$1517442620720155396, %rdi
+	movq	%rdx, %rax
+	movb	$-128, 80(%rsp,%rdx)
+	sall	$3, %eax
 	vmovaps	%xmm0, 32(%rsp)
-	cltd
+	cltq
 	vmovaps	%xmm0, 48(%rsp)
-	idivl	%edi
-	xorl	%edi, %edi
-	sall	$6, %eax
-	leal	56(%rax), %ecx
-	movslq	%esi, %rax
-	sall	$3, %esi
-	movb	$-128, 80(%rsp,%rax)
-	movslq	%esi, %rsi
-	movswq	%cx, %rax
-	movl	%ecx, %edx
-	movq	%rsi, 80(%rsp,%rax)
-	sarw	$15, %dx
-	movl	$64, %esi
-	movl	%ecx, %eax
-	idivw	%si
-	subl	%edx, %ecx
-	movswq	%cx, %rsi
+	movq	%rax, 712(%rsp)
 .L6:
-	leal	3(%rdi), %eax
-	movl	%edi, %ecx
+	leal	3(%r8), %eax
+	movl	%r8d, %ecx
 	movl	$16909056, 20(%rsp)
 	andl	$3, %eax
-	movl	%ecx, %ebp
+	movl	%ecx, %r11d
 	movl	$327936, 24(%rsp)
 	movsbq	20(%rsp,%rax), %rax
-	sarb	$4, %bpl
-	movq	%r8, 64(%rsp)
+	sarb	$4, %r11b
+	movq	%rsi, 64(%rsp)
 	movl	$117638401, 28(%rsp)
-	movsbl	%bpl, %ebx
-	movl	48(%rsp,%rax,4), %r11d
-	leal	2(%rdi), %eax
-	incl	%edi
-	movq	%r9, 72(%rsp)
-	movl	%edi, %edx
+	movsbl	%r11b, %ebx
+	movl	48(%rsp,%rax,4), %r10d
+	leal	2(%r8), %eax
+	incl	%r8d
+	movq	%rdi, 72(%rsp)
+	movl	%r8d, %edx
 	andl	$3, %eax
 	andl	$3, %edx
 	movsbq	20(%rsp,%rax), %rax
 	movsbq	20(%rsp,%rdx), %rdx
 	movl	48(%rsp,%rax,4), %eax
 	movl	48(%rsp,%rdx,4), %edx
-	cmpb	$2, %bpl
+	cmpb	$2, %r11b
 	je	.L2
-	cmpb	$3, %bpl
+	cmpb	$3, %r11b
 	je	.L3
-	decb	%bpl
+	decb	%r11b
 	je	.L4
 	xorl	%edx, %eax
-	andl	%r11d, %eax
+	andl	%r10d, %eax
 	jmp	.L16
 .L4:
-	movl	%r11d, %ebp
-	xorl	%eax, %ebp
-	andl	%edx, %ebp
+	movl	%r10d, %r11d
+	xorl	%eax, %r11d
+	andl	%edx, %r11d
 	jmp	.L15
 .L2:
-	xorl	%r11d, %eax
+	xorl	%r10d, %eax
 .L16:
 	xorl	%edx, %eax
-	movl	%eax, %ebp
+	movl	%eax, %r11d
 	jmp	.L5
 .L3:
 	notl	%edx
-	movl	%edx, %ebp
-	orl	%r11d, %ebp
+	movl	%edx, %r11d
+	orl	%r10d, %r11d
 .L15:
-	xorl	%eax, %ebp
+	xorl	%eax, %r11d
 .L5:
-	movslq	%ebx, %r12
+	movslq	%ebx, %rbp
 	movl	%ecx, %eax
-	movl	%edi, 8(%rsp)
-	movsbl	28(%rsp,%r12), %edx
+	movl	%r8d, 8(%rsp)
+	movsbl	28(%rsp,%rbp), %edx
 	fildl	8(%rsp)
 	andl	$15, %eax
 	imull	%edx, %eax
-	movsbl	24(%rsp,%r12), %edx
+	movsbl	24(%rsp,%rbp), %edx
 	addl	%edx, %eax
 	cltd
-	idivl	%r10d
+	idivl	%r9d
 	movslq	%edx, %rax
-	leaq	1104(%rsp,%rax,4), %rax
-	movl	-1024(%rsi,%rax), %edx
+	movl	656(%rsp,%rax,4), %edx
 	movl	%ecx, %eax
 	andl	$3, %eax
 	leal	(%rax,%rbx,4), %ecx
 	movslq	%ecx, %rcx
 	movsbl	64(%rsp,%rcx), %ecx
 #APP
-# 21 "main-new.c" 1
+# 21 "main-src.c" 1
 	fsin
-
+	
 # 0 "" 2
 #NO_APP
 	fabs
@@ -130,14 +114,14 @@ _start:
 	cltq
 	movsbq	20(%rsp,%rax), %rbx
 	addl	48(%rsp,%rbx,4), %edx
-	leal	(%rdx,%rbp), %eax
+	leal	(%rdx,%r11), %eax
 	fisttpq	8(%rsp)
 	movq	8(%rsp), %rdx
 	addl	%edx, %eax
 	roll	%cl, %eax
-	addl	%r11d, %eax
+	addl	%r10d, %eax
 	movl	%eax, 48(%rsp,%rbx,4)
-	cmpl	$64, %edi
+	cmpl	$64, %r8d
 	jne	.L6
 	vmovdqa	32(%rsp), %xmm1
 	vpaddd	48(%rsp), %xmm1, %xmm0
@@ -162,22 +146,24 @@ _start:
 .L9:
 	movb	%dl, 64(%rsp)
 	leaq	64(%rsp), %rsi
-	mov	$1, %dl
+	movl	$1, %edx
 	incl	%ebx
-	mov	$1, %dil
-	mov	$1, %al
-        	syscall #call	write
+	movl	$1, %edi
+	mov	    $1, %al
+    syscall #call	write
+
 	cmpb	$32, %bl
 	jne	.L10
 	xorl	%edi, %edi
 	mov	    $60, %al
-        	syscall #call	exit
+    syscall #call	exit
+
 	.align 16
 .LC0:
-	.long	1683346178
-	.long	1463545587
-	.long	572621651
-	.long	-303801772
+	.long	-1076239813
+	.long	381145347
+	.long	-452070223
+	.long	277220974
 	.align 4
 .LC1:
 	.long	1333788672
