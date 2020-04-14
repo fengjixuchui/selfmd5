@@ -26,10 +26,8 @@ static long double fsin_my(long double a) {
     return (res) > 0 ? res : -res;
 }
 
-typedef unsigned int v4si __attribute__ ((vector_size (16)));
-
 int main(int argc, char *argv[]) {
-    char data[1024];
+    char data[700];
     short len = read(open(argv[0], 0, 0), data, sizeof(data));
 
     unsigned int hash[] = {(unsigned int) (0x67452301), (unsigned int) (0xEFCDAB89), (unsigned int) (0x98BADCFE),
@@ -52,7 +50,7 @@ int main(int argc, char *argv[]) {
         for (char i = 0; i < 64; ++i) {
 
             unsigned int F;
-            int g;
+            char g;
             switch (i / 16) {
                 case 0:
                     F = FF(B, C, D);
@@ -72,7 +70,7 @@ int main(int argc, char *argv[]) {
                     break;
             }
 
-            unsigned int K = (unsigned int) ((unsigned long long) 4294967296 * fsin_my(i + 1));
+            unsigned int K = (unsigned int) (((unsigned long long) 1 << 32) * fsin_my(i + 1));
 
             F += A + K + m[g];
 
@@ -91,7 +89,7 @@ int main(int argc, char *argv[]) {
     unsigned char *buf = (unsigned char *) &hash[0];
     for (unsigned char i = 0; i < 32; i++) {
         char a = (buf[i / 2] >> (4 * (1 - i % 2))) & 0xF;
-        char c = a >= 10 ? 'a' + (a - 10) : '0' + a;
+        char c = a >= 10 ? a + ('a' - 10) : a + '0';
         write(1, &c, 1);
     }
 
