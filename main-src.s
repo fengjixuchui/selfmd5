@@ -21,7 +21,7 @@ _start:
 	mov	    $2, %al
     syscall #call	open
 
-	movl	$700, %edx
+	mov	    $700, %dx
 	leaq	52(%rsp), %rsi
 	movl	%eax, %edi
 	xor	    %al, %al
