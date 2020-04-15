@@ -1,8 +1,8 @@
 # selfmd5
-计算自身md5的最小程序，最终大小约676字节.
+计算自身md5的最小程序，最终大小约549字节.
 ```
 # ll selfmd5 
--rwxr-xr-x 1 root root 676 4月   9 09:52 selfmd5
+-rwxr-xr-x 1 root root 549 4月   9 09:52 selfmd5
 ```
 
 # 编译
