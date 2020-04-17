@@ -1,8 +1,8 @@
 # selfmd5
-计算自身md5的最小程序，最终大小约549字节.
+计算自身md5的最小程序，最终大小约532字节.
 ```
 # ll selfmd5 
--rwxr-xr-x 1 root root 549 4月   9 09:52 selfmd5
+-rwxr-xr-x 1 root root 532 4月   9 09:52 selfmd5
 ```
 
 # 编译
@@ -14,4 +14,8 @@ gcc -S main-src.c  -Os -mavx -msse -mavx2 -ffast-math -fsingle-precision-constan
 * 精简main-src.s的无用代码，编译，并sstrip
 ```
 ./build-asm.sh
+```
+* 最后把text塞点到elf header里
+```
+./trim-asm.sh
 ```
