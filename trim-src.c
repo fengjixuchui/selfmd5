@@ -50,26 +50,40 @@ int main(int argc, char *argv[]) {
     foo.ehdr.e_entry = ADDR_TEXT + offsetof(elf, ehdr) + 8;
     printf("new entry %d\n", offsetof(elf, ehdr) + 8);
 
-    // copy first 5 bytes
+    // copy 5 bytes
     foo.ehdr.e_ident[8] = foo.text[0];
     foo.ehdr.e_ident[9] = foo.text[1];
     foo.ehdr.e_ident[10] = foo.text[2];
     foo.ehdr.e_ident[11] = foo.text[3];
     foo.ehdr.e_ident[12] = foo.text[4];
     foo.ehdr.e_ident[13] = 0xEB;
-    foo.ehdr.e_ident[14] = (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_shoff)) - (offsetof(elf, ehdr) + 15);
-    printf("jmp first %d\n", foo.ehdr.e_ident[14]);
+    foo.ehdr.e_ident[14] = (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_version)) - (offsetof(elf, ehdr) + 15);
+    printf("jmp %d\n", foo.ehdr.e_ident[14]);
 
     for (int i = 0; i < sizeof(foo.text) - 5; ++i) {
         foo.text[i] = foo.text[i + 5];
     }
     size -= 5;
 
-    // copy second 10 bytes
+    // copy 2 bytes
+    ((char *) (&foo.ehdr.e_version))[0] = foo.text[0];
+    ((char *) (&foo.ehdr.e_version))[1] = foo.text[1];
+    ((char *) (&foo.ehdr.e_version))[2] = 0xEB;
+    ((char *) (&foo.ehdr.e_version))[3] =
+            (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_shoff)) -
+            (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_version) + 4);
+
+    for (int i = 0; i < sizeof(foo.text) - 2; ++i) {
+        foo.text[i] = foo.text[i + 2];
+    }
+    size -= 2;
+
+    // copy 10 bytes
     memcpy(&foo.ehdr.e_shoff, &foo.text[0], 10);
     ((char *) (&foo.ehdr.e_shoff))[10] = 0xEB;
-    ((char *) (&foo.ehdr.e_shoff))[11] = offsetof(elf, text) - (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_shoff) + 12);
-    printf("jmp second %d\n", ((char *) (&foo.ehdr.e_shoff))[11]);
+    ((char *) (&foo.ehdr.e_shoff))[11] = offsetof(elf, text) -
+                                         (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_shoff) + 12);
+    printf("jmp %d\n", ((char *) (&foo.ehdr.e_shoff))[11]);
 
     for (int i = 0; i < sizeof(foo.text) - 10; ++i) {
         foo.text[i] = foo.text[i + 10];

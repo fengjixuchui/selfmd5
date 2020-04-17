@@ -14,11 +14,11 @@ _start:
 	#pushq	%r12
 	#pushq	%rbp
 	#pushq	%rbx
+	mov	    $2, %al
 	movabsq	$1167088121787636990, %rbx
 	subq	$752, %rsp
 	#movq	(%r8), %rdi
 	leaq	628(%rsp), %r12
-	mov	    $2, %al
     syscall #call	open
 
 	mov	    $700, %dx
