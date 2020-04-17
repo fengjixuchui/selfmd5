@@ -37,7 +37,7 @@ _start:
 	movq	%rdx, %rax
 	movb	$-128, 52(%rsp,%rdx)
 	sall	$3, %eax
-	cltq
+	#cltq
 	movq	%rax, 620(%rsp)
 .L7:
 	movl	20(%rsp), %ebp
