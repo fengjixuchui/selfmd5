@@ -2,14 +2,14 @@
 selfmd5项目为参加公司一个内部比赛所写，要求输出自身md5的最小程序，必须是64位ELF文件，
 不能使用socket系统调用。
 
-最终以大小决定名次，越小的排名越高。本项目最终大小**504**字节。
+最终以大小决定名次，越小的排名越高。本项目最终大小**498**字节。
 
 下面是运行效果:
 ```
 # md5sum selfmd5-test
-cdcdb8ab7ebae1ae740313d1e88b98a5  selfmd5-test
+0936155ee1938f74bc28457f3370437a  selfmd5-test
 # ./selfmd5-test
-cdcdb8ab7ebae1ae740313d1e88b98a5
+0936155ee1938f74bc28457f3370437a
 ```
 
 # 原理
@@ -384,9 +384,9 @@ movabsq	$1517442620720155396, %r9
 7. 最终结果
 ```
 # md5sum selfmd5-test
-cdcdb8ab7ebae1ae740313d1e88b98a5  selfmd5-test
+0936155ee1938f74bc28457f3370437a  selfmd5-test
 # ./selfmd5-test
-cdcdb8ab7ebae1ae740313d1e88b98a5
+0936155ee1938f74bc28457f3370437a
 # ll selfmd5-test 
--rwxr-xr-x 1 root root 504 4月  18 13:08 selfmd5-test
+-rwxr-xr-x 1 root root 498 4月  18 13:08 selfmd5-test
 ```
