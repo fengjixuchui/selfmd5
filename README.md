@@ -222,9 +222,9 @@ main:
 char *data = (char *) START;
 const short len = 504;
 ```
-这个0x400000是ELF头里指定的Segment virtual address，从这里就能直接开始读自己。
+这个0x400000是ELF头里指定的Segment virtual address，从这里就能直接开始读自己在内存中的映射。
 
-并且最终文件大小是固定的，所以可以写死。
+并且最终文件大小是固定的，所以len可以直接写死。
 
 但是MD5算法有一个写buffer的操作，如下：
 ```
