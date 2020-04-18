@@ -224,6 +224,8 @@ const short len = 504;
 ```
 这个0x400000是ELF头里指定的Segment virtual address，从这里就能直接开始读自己。
 
+并且最终文件大小是固定的，所以可以写死。
+
 但是MD5算法有一个写buffer的操作，如下：
 ```
 // Pre-processing: adding a single 1 bit
