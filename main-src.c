@@ -26,14 +26,17 @@ static long double fsin_my(long double a) {
     return (res) > 0 ? res : -res;
 }
 
+#define START 0x400000
+
 int main(int argc, char *argv[]) {
-    char data[700];
-    short len = read(open(argv[0], 0, 0), data, sizeof(data));
 
     unsigned int hash[] = {(unsigned int) (0x67452301), (unsigned int) (0xEFCDAB89), (unsigned int) (0x98BADCFE),
                            (unsigned int) (0x10325476)};
 
-    const short new_len = 568;
+    char *data = (char *) START;
+
+    const short len = 520;
+    const short new_len = ((((len + 8) / 64) + 1) * 64) - 8;
     data[len] = 0x80;
     *(unsigned long long *) (data + new_len) = len << 3;
 
