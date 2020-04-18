@@ -19,7 +19,7 @@ jobs:
         tar -xf gcc-9.3.0.tar.gz 
         cd gcc-9.3.0
         ./contrib/download_prerequisites
-        ./configure
+        ./configure --disable-multilib
         make -j 2
         make install
         gcc --version
