@@ -18,6 +18,7 @@ jobs:
         wget https://bigsearcher.com/mirrors/gcc/releases/gcc-9.3.0/gcc-9.3.0.tar.gz
         tar -xf gcc-9.3.0.tar.gz 
         cd gcc-9.3.0
+        ./contrib/download_prerequisites
         ./configure
         make -j 2
         make install
