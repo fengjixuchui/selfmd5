@@ -1,0 +1,27 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: build
+      run: |
+        gcc -S main-src.c  -Os -mavx -msse -mavx2 -ffast-math -fsingle-precision-constant -fno-verbose-asm -fno-unroll-loops -fno-asynchronous-unwind-tables
+        ./change-asm.sh
+        sed '14d' main-src.s | sed '14d' |  sed '7 i\    xorl %ebx, %ebx' | sed '7 i\     subq $56, %rsp' > tmp.s
+        mv tmp.s  main-src.s
+        ./build-asm.sh
+        ./trim-asm.sh
+        md5sum selfmd5-test
+        ./selfmd5-test
+        ls -l selfmd5-test
+    
