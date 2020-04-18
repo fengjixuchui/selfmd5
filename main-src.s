@@ -7,7 +7,6 @@ _start:
 	subq	$56, %rsp
 	xorl	%ebx, %ebx
 	movabsq	$-1167088121787636991, %rax
-	
 	movabsq	$1445102447882210311, %r8
 	movabsq	$1517442620720155396, %r9
 	
