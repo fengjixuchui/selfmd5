@@ -4,20 +4,20 @@
 	.globl	_start
 	.type	_start, @function
 _start:
+	subq	$56, %rsp
+	xorl	%ebx, %ebx
 	movabsq	$-1167088121787636991, %rax
 	
 	movabsq	$1445102447882210311, %r8
 	movabsq	$1517442620720155396, %r9
 	
 	
-	
-	xorl	%ebx, %ebx
-	subq	$56, %rsp
+
 	movq	%rax, 16(%rsp)
 	movabsq	$1167088121787636990, %rax
 	movq	%rax, 24(%rsp)
-	movb	$-128, 4194824
-	movq	$4160, 4194872
+	movb	$-128, 4194808
+	movq	$4032, 4194872
 .L7:
 	movl	16(%rsp), %ebp
 	movl	20(%rsp), %r10d

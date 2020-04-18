@@ -36,7 +36,7 @@
 
 int main(int argc, char *argv[]) {
 
-    size_t size = sizeof(foo) - sizeof(foo._end);
+    size_t size = sizeof(foo);// - sizeof(foo._end);
 
     for (int i = 8; i < 16; ++i) {
         foo.ehdr.e_ident[i] = 0xFF;
@@ -50,20 +50,19 @@ int main(int argc, char *argv[]) {
     foo.ehdr.e_entry = ADDR_TEXT + offsetof(elf, ehdr) + 8;
     printf("new entry %d\n", offsetof(elf, ehdr) + 8);
 
-    // copy 5 bytes
+    // copy 4 bytes
     foo.ehdr.e_ident[8] = foo.text[0];
     foo.ehdr.e_ident[9] = foo.text[1];
     foo.ehdr.e_ident[10] = foo.text[2];
     foo.ehdr.e_ident[11] = foo.text[3];
-    foo.ehdr.e_ident[12] = foo.text[4];
-    foo.ehdr.e_ident[13] = 0xEB;
-    foo.ehdr.e_ident[14] = (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_version)) - (offsetof(elf, ehdr) + 15);
-    printf("jmp %d\n", foo.ehdr.e_ident[14]);
+    foo.ehdr.e_ident[12] = 0xEB;
+    foo.ehdr.e_ident[13] = (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_version)) - (offsetof(elf, ehdr) + 14);
+    printf("jmp %d\n", foo.ehdr.e_ident[13]);
 
-    for (int i = 0; i < sizeof(foo.text) - 5; ++i) {
-        foo.text[i] = foo.text[i + 5];
+    for (int i = 0; i < sizeof(foo.text) - 4; ++i) {
+        foo.text[i] = foo.text[i + 4];
     }
-    size -= 5;
+    size -= 4;
 
     // copy 2 bytes
     ((char *) (&foo.ehdr.e_version))[0] = foo.text[0];
