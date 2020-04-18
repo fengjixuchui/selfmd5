@@ -381,3 +381,12 @@ movabsq	$1517442620720155396, %r9
 ```
 ./trim-asm.sh
 ```
+7. 最终结果
+```
+# md5sum selfmd5-test
+cdcdb8ab7ebae1ae740313d1e88b98a5  selfmd5-test
+# ./selfmd5-test
+cdcdb8ab7ebae1ae740313d1e88b98a5
+# ll selfmd5-test 
+-rwxr-xr-x 1 root root 504 4月  18 13:08 selfmd5-test
+```
