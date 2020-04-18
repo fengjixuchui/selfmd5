@@ -321,7 +321,7 @@ elf foo =
 ```
 可以看到，elftoc把ELF文件以一种易读懂、易操作的方式展现出来了，只需要把foo整块内存写成文件，就是一个ELF可执行程序。
 
-然后通过查阅资料和试验，可以得出修改ELF头的foo.ehdr.e_ident[8]-e_ident[15]、foo.ehdr.e_version、foo.ehdr.e_shoff、foo.ehdr.e_flags不影响运行。
+然后通过查阅资料和试验，可以得出修改ELF头的foo.ehdr.e_ident[8]-e_ident[15]、foo.ehdr.e_version、foo.ehdr.e_shoff、foo.ehdr.e_flags不影响运行。ELF的定义在/usr/include/elf.h中。
 
 那么剩下的就是把text里的code挪入到上面的那几个空位，然后再用2字节JMP回来。
 
