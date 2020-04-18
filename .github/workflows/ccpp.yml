@@ -10,7 +10,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    cxx: g++-9
 
     steps:
     - uses: actions/checkout@v2
