@@ -275,6 +275,7 @@ sstrip ./selfmd5
 
 ## ELF头裁剪
 ELF头部其实有很多字节是可以被修改的，不影响运行，所以可以把code移到ELF头里，通过JMP串联起来
+
 先用elftoc把ELF转成selfmd5.h文件
 ```
 elftoc ./selfmd5 > selfmd5.h
