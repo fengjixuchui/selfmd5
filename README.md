@@ -206,12 +206,12 @@ main:
 ```
 	movl	$1, %edi
 	mov	$1, %al
-    syscall
+	syscall
 	cmpb	$32, %bl
 	jne	.L11
 	xorl	%edi, %edi
 	mov	$60, %al
-    syscall
+	syscall
 ```
 最终优化汇编的操作放到了./change-asm.sh里，每次gcc转换完汇编后，执行一下即可。
 
