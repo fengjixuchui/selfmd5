@@ -36,7 +36,7 @@
 
 int main(int argc, char *argv[]) {
 
-    size_t size = sizeof(foo);// - sizeof(foo._end);
+    size_t size = sizeof(foo) - sizeof(foo._end);
 
     for (int i = 8; i < 16; ++i) {
         foo.ehdr.e_ident[i] = 0xFF;

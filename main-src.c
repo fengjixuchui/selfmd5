@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
     char *data = (char *) START;
 
-    const short len = 504;
+    const short len = 498;
     const short new_len = ((((len + 8) / 64) + 1) * 64) - 8;
     data[len] = 0x80;
     *(unsigned long long *) (data + new_len) = len << 3;

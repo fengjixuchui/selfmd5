@@ -7,6 +7,7 @@ _start:
 	subq	$56, %rsp
 	xorl	%ebx, %ebx
 	movabsq	$-1167088121787636991, %rax
+	
 	movabsq	$1445102447882210311, %r8
 	movabsq	$1517442620720155396, %r9
 	
@@ -15,8 +16,8 @@ _start:
 	movq	%rax, 16(%rsp)
 	movabsq	$1167088121787636990, %rax
 	movq	%rax, 24(%rsp)
-	movb	$-128, 4194808
-	movq	$4032, 4194872
+	movb	$-128, 4194802
+	movq	$3984, 4194808
 .L7:
 	movl	16(%rsp), %ebp
 	movl	20(%rsp), %r10d
@@ -102,7 +103,7 @@ _start:
 	addl	%eax, 20(%rsp)
 	addl	%r10d, 24(%rsp)
 	addl	%edi, 28(%rsp)
-	cmpq	$576, %rbx
+	cmpq	$512, %rbx
 	jne	.L7
 	xorl	%ebx, %ebx
 .L11:
@@ -124,7 +125,7 @@ _start:
 .L10:
 	movb	%dl, 32(%rsp)
 	leaq	32(%rsp), %rsi
-	movl	$1, %edx
+	mov $1, %dl
 	incl	%ebx
 	movl	$1, %edi
 	mov	$1, %al
@@ -136,7 +137,7 @@ _start:
   syscall
 	
 	
-	.align 4
+	
 .LC0:
 	.long	1333788672
 	

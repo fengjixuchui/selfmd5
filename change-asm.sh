@@ -11,3 +11,5 @@ sed -i "s/call	write/mov	\$1, %al\n  syscall/g" main-src.s
 sed -i "s/call	exit/mov	\$60, %al\n  syscall/g" main-src.s
 sed -i "s/pushq.*//g" main-src.s
 sed -i "s/.size	main, .-main//g" main-src.s
+sed -i "s/.align 4//g" main-src.s
+sed -i "s/movl	\$1, %edx/mov \$1, %dl/g" main-src.s
