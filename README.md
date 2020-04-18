@@ -246,6 +246,17 @@ text段是无法写的，如果copy出来，又会多余一些操作指令，网
 gcc -Wl,--omagic -Os -fdata-sections -ffunction-sections -flto main-src.s -o selfmd5 -Wl,--gc-sections -Wl,--strip-all -nostdlib -nostdinc
 ```
 
+## 打印结果优化
+前面说到不能使用libc，所以printf也不能用了，因此必须自己实现一个打印16进制的代码。如下：
+```
+for (unsigned char i = 0; i < 32; i++) {
+    char a = (buf[i / 2] >> (4 * (1 - i % 2))) & 0xF;
+    char c = a >= 10 ? a + ('a' - 10) : a + '0';
+    write(1, &c, 1);
+}
+```
+注意这里每次循环只打印一个字符，也是为了缩减代码指令的考虑。
+
 # ELF裁剪
 前面汇编，编译出的结果基本在1k以内了。所以现在开始对ELF下手。
 
