@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     v4si hash = {(unsigned int) (0x67452301), (unsigned int) (0xEFCDAB89), (unsigned int) (0x98BADCFE),
                    (unsigned int) (0x10325476)};
 
-    const short len = 481;
+    const short len = 474;
     const short new_len = ((((len + 8) / 64) + 1) * 64) - 8;
     data[len] = 0x80;
     *(unsigned long long *) (data + new_len) = len << 3;

@@ -13,3 +13,5 @@ sed -i "s/.align 4//g" main-src.s
 sed -i "s/movl	\$1, %edx/mov \$1, %dl/g" main-src.s
 sed -i "s/.align 16//g" main-src.s
 sed -i "s/vmovdqa/vmovdqu/g" main-src.s
+sed -i "s/movsbq	%r11b, %r11//g" main-src.s
+sed -i "s/movslq	%ecx, %rcx//g" main-src.s

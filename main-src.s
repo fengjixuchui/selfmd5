@@ -7,14 +7,14 @@ _start:
 
 	subq	$64, %rsp
 	xorl	%edx, %edx
-	movb	$-128, 4194785
+	movb	$-128, 4194778
 	vmovdqu	.LC0(%rip), %xmm0
 	vmovaps	%xmm0, 32(%rsp)
 	vmovdqu	.LC2(%rip), %xmm0
 	movl	36(%rsp), %edi
 	movl	32(%rsp), %r9d
 	movl	40(%rsp), %esi
-	movq	$3848, 4194808
+	movq	$3792, 4194808
 	movl	44(%rsp), %r8d
 	vmovaps	%xmm0, 48(%rsp)
 .L6:
@@ -70,9 +70,9 @@ _start:
 	fabs
 	fmuls	.LC1(%rip)
 	andl	$3, %ecx
-	movsbq	%r11b, %r11
+	
 	leal	(%rcx,%r10,4), %ecx
-	movslq	%ecx, %rcx
+	
 	movsbl	48(%rsp,%rcx), %ecx
 	fisttpq	8(%rsp)
 	movq	8(%rsp), %rbx
@@ -126,6 +126,7 @@ _start:
 	
 	
 
+	
 .LC1:
 	.long	1333788672
 	
@@ -135,10 +136,9 @@ _start:
 	.quad	1517442620720155396
 
 .LC0:
-	.long	1044423762
-	.long	519765894
-	.long	1929582228
-	.long	-299927650
-
+	.long	1552271408
+	.long	1380605251
+	.long	293175058
+	.long	-760172391
 
 	
