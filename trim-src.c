@@ -77,17 +77,17 @@ int main(int argc, char *argv[]) {
     }
     size -= 2;
 
-    // copy 10 bytes
-    memcpy(&foo.ehdr.e_shoff, &foo.text[0], 10);
-    ((char *) (&foo.ehdr.e_shoff))[10] = 0xEB;
-    ((char *) (&foo.ehdr.e_shoff))[11] = offsetof(elf, text) -
-                                         (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_shoff) + 12);
-    printf("jmp %d\n", ((char *) (&foo.ehdr.e_shoff))[11]);
+    // copy 8 bytes
+    memcpy(&foo.ehdr.e_shoff, &foo.text[0], 8);
+    ((char *) (&foo.ehdr.e_shoff))[8] = 0xEB;
+    ((char *) (&foo.ehdr.e_shoff))[9] = offsetof(elf, text) -
+                                         (offsetof(elf, ehdr) + offsetof(Elf64_Ehdr, e_shoff) + 10);
+    printf("jmp %d\n", ((char *) (&foo.ehdr.e_shoff))[9]);
 
-    for (int i = 0; i < sizeof(foo.text) - 10; ++i) {
-        foo.text[i] = foo.text[i + 10];
+    for (int i = 0; i < sizeof(foo.text) - 8; ++i) {
+        foo.text[i] = foo.text[i + 8];
     }
-    size -= 10;
+    size -= 8;
 
     // output
     FILE *fd = fopen("selfmd5-test", "wb");
