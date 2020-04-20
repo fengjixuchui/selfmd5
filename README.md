@@ -438,7 +438,7 @@ size -= 4;
 # 编译
 下面是具体的操作步骤
 1. 下载最新gcc9.3，也可用docker
-2. 编译汇编main-src.s
+2. 把main-src.c编译成汇编main-src.s
 ```
 gcc -S main-src.c  -Os -mavx -msse -mavx2 -ffast-math -fsingle-precision-constant -fno-verbose-asm -fno-unroll-loops -fno-asynchronous-unwind-tables
 ```
