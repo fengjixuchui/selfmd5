@@ -512,6 +512,6 @@ vmovdqu	.LC2(%rip), %xmm0
 45d0637e0de0eca20e7456b0bad6ee99  selfmd5-test
 # ./selfmd5-test
 45d0637e0de0eca20e7456b0bad6ee99
-# ll selfmd5-test 
--rwxr-xr-x 1 root root 498 4月  18 13:08 selfmd5-test
+ll selfmd5-test
+-rwxr-xr-x 1 root root 474 4月  20 10:35 selfmd5-test
 ```
