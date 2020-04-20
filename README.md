@@ -220,7 +220,7 @@ main:
 ```
 #define START 0x400000
 char *data = (char *) START;
-const short len = 504;
+const short len = 474;
 ```
 这个0x400000是ELF头里指定的Segment virtual address，从这里就能直接开始读自己在内存中的映射。
 
