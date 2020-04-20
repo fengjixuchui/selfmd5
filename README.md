@@ -2,14 +2,14 @@
 selfmd5项目为参加公司一个内部比赛所写，要求输出自身md5的最小程序，必须是64位ELF文件，
 不能使用socket系统调用。
 
-最终以大小决定名次，越小的排名越高。本项目最终大小**498**字节。
+最终以大小决定名次，越小的排名越高。本项目最终大小**474**字节。
 
 下面是运行效果:
 ```
 # md5sum selfmd5-test
-0936155ee1938f74bc28457f3370437a  selfmd5-test
+45d0637e0de0eca20e7456b0bad6ee99  selfmd5-test
 # ./selfmd5-test
-0936155ee1938f74bc28457f3370437a
+45d0637e0de0eca20e7456b0bad6ee99
 ```
 
 # 原理
@@ -148,7 +148,7 @@ for (short off = 0; off < new_len; off += BLOCK_LEN) {
     hash[3] += D;
 }
 ```
-这就是MD5算法的主要部分。
+这就是MD5算法的主要部分。这里其实还有优化的地方，后面会讲到。
 
 ## 打印结果
 从网上随便找点代码，打印16进制的字符串如下:
@@ -237,13 +237,103 @@ append "1" bit to message
 append "0" bit until message length in bits ≡ 448 (mod 512)
 append original length in bits mod 264 to message
 ```
-text段是无法写的，如果copy出来，又会多余一些操作指令，网上搜一搜，gcc添加一条编译指令即可
+text段是无法写的，如果copy出来，又会多余一些操作指令，网上搜一搜，gcc添加一条编译指令，让它可写即可
 ```
 -Wl,--omagic 
 ```
 所以最后gcc编译汇编的指令如下：
 ```
 gcc -Wl,--omagic -Os -fdata-sections -ffunction-sections -flto main-src.s -o selfmd5 -Wl,--gc-sections -Wl,--strip-all -nostdlib -nostdinc
+```
+
+## MD5算法优化
+观察前面的MD5算法，可以看到由两层循环组成，每64个字节执行一轮MD5计算。
+
+但是其实可以只计算最后一轮，把除掉最后一轮，之前轮的结果都计算出来，然后放到初始化中。这样就能少一层循环。
+
+即构造一个初始hash值，只计算一轮，输出结果，代码如下：
+```
+unsigned int A = hash[0];
+unsigned int B = hash[1];
+unsigned int C = hash[2];
+unsigned int D = hash[3];
+
+for (char i = 0; i < 64; ++i) {
+
+    unsigned int F;
+    char g;
+    switch (i / 16) {
+        case 0:
+            F = FF(B, C, D);
+            g = i;
+            break;
+        case 1:
+            F = GG(B, C, D);
+            g = (5 * i + 1) % 16;
+            break;
+        case 2:
+            F = HH(B, C, D);
+            g = (3 * i + 5) % 16;
+            break;
+        case 3:
+            F = II(B, C, D);
+            g = (7 * i) % 16;
+            break;
+    }
+
+    unsigned int K = (unsigned int) (((unsigned long long) 1 << 32) * fsin_my(i + 1));
+
+    F += A + K + m[g];
+
+    A = D;
+    D = C;
+    C = B;
+    B = B + ROTLEFT(F, ss[(i / 16) * 4 + (i % 4)]);
+}
+
+hash[0] += A;
+hash[1] += B;
+hash[2] += C;
+hash[3] += D;
+```
+这里有个要求，就是hash值必须放在ELF的最后64字节内，这个可以通过调整汇编的段位置解决。
+
+并且需要先编译汇编，然后用工具计算初始hash值，修改汇编，再重新编译一次，两次编译的ELF用工具计算出来的初始hash值一样即可。
+
+计算初始hash值的工具也很简单，去掉最后一轮的计算，打印即可，代码参考calc-hash.c，使用方法：
+```
+# ./calc-hash.sh 
+67452301
+efcdab89
+98badcfe
+10325476
+
+1732584193
+-271733879
+-1732584194
+271733878
+
+off=448 len=474 new_len=504
+
+5c85c830
+524a5d43
+11797f12
+d2b0b099
+
+1552271408
+1380605251
+293175058
+-760172391
+
+45d0637e0de0eca20e7456b0bad6ee99
+```
+最后的4个10进制数字，即为初始hash值，复制到汇编中替换即可
+```
+.LC0:
+	.long	1552271408
+	.long	1380605251
+	.long	293175058
+	.long	-760172391
 ```
 
 ## 打印结果优化
@@ -356,21 +446,38 @@ gcc -S main-src.c  -Os -mavx -msse -mavx2 -ffast-math -fsingle-precision-constan
 ```
 ./change-asm.sh
 ```
-4. 手调main-src.s，原始如下
+4. 手调main-src.s，_start入口的地方，原始如下
 ```
-movabsq	$-1167088121787636991, %rax
-movabsq	$1445102447882210311, %r8
-movabsq	$1517442620720155396, %r9
-xorl	%ebx, %ebx
-subq	$56, %rsp
+xorl	%edx, %edx
+subq	$64, %rsp
+vmovdqu	.LC0(%rip), %xmm0
+vmovaps	%xmm0, 32(%rsp)
+vmovdqu	.LC2(%rip), %xmm0
+movb	$-128, 4194778
 ```
-调整成:
+前三指令调整成4字节+2字节+10字节的形式，如下:
 ```
-subq	$56, %rsp
-xorl	%ebx, %ebx
-movabsq	$-1167088121787636991, %rax
-movabsq	$1445102447882210311, %r8
-movabsq	$1517442620720155396, %r9
+subq	$64, %rsp
+xorl	%edx, %edx
+movb	$-128, 4194778
+vmovdqu	.LC0(%rip), %xmm0
+vmovaps	%xmm0, 32(%rsp)
+vmovdqu	.LC2(%rip), %xmm0
+```
+再调整.LC0的位置，放到文件末尾：
+```
+.LC1:
+	.long	1333788672
+	
+.LC2:
+	.quad	1445102447882210311
+	.quad	1517442620720155396
+
+.LC0:
+	.long	1732584193
+	.long	-271733879
+	.long	-1732584194
+	.long	271733878
 ```
 
 5. 编译main-src.s，并sstrip
@@ -381,12 +488,30 @@ movabsq	$1517442620720155396, %r9
 ```
 ./trim-asm.sh
 ```
-7. 最终结果
+7. 计算初始hash值
+```
+./calc-hash.sh 
+```
+8. 复制4个数字到main-src.s，替换.LC0
+```
+.LC0:
+	.long	1552271408
+	.long	1380605251
+	.long	293175058
+	.long	-760172391
+```
+9. 重新执行5、6、7，确保初始hash值没变
+```
+./build-asm.sh
+./trim-asm.sh
+./calc-hash.sh
+```
+10. 最终结果
 ```
 # md5sum selfmd5-test
-0936155ee1938f74bc28457f3370437a  selfmd5-test
+45d0637e0de0eca20e7456b0bad6ee99  selfmd5-test
 # ./selfmd5-test
-0936155ee1938f74bc28457f3370437a
+45d0637e0de0eca20e7456b0bad6ee99
 # ll selfmd5-test 
 -rwxr-xr-x 1 root root 498 4月  18 13:08 selfmd5-test
 ```
